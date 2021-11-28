@@ -19,7 +19,7 @@ typedef struct
     int vexnum, arcnum;
     int kind;
 } ALGraph;
-
+//7.37
 int DP(ALGraph &G, int i, int dp[], int choice[])
 {
     if (dp[i] > 0)
@@ -38,7 +38,7 @@ int DP(ALGraph &G, int i, int dp[], int choice[])
     }
     return dp[i];
 }
-
+//O(N^2)
 void find_longest_road(ALGraph &G)
 {
     int dp[G.vexnum];

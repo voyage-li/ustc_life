@@ -19,12 +19,11 @@ typedef struct
     int vexnum, arcnum;
     int kind;
 } ALGraph;
-
+//7.31
 int min(int a, int b)
 {
     return a > b ? b : a;
 }
-
 void DFS(ALGraph &G, int i, int &time, std::vector<int> &s, int dfn[], int low[])
 {
     s.push_back(i);
@@ -55,7 +54,7 @@ void DFS(ALGraph &G, int i, int &time, std::vector<int> &s, int dfn[], int low[]
         putchar('\n');
     }
 }
-
+//O(N+e)
 void Tarjan(ALGraph &G)
 {
     int dfn[G.vexnum];

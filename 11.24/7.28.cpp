@@ -19,7 +19,7 @@ typedef struct
     int vexnum, arcnum;
     int kind;
 } ALGraph;
-
+//7.28
 void find_road(ALGraph &G, int u, int v, std::string s, std::vector<std::string> &ans, int visit[])
 {
     s.push_back(G.vertices[u].data);
@@ -39,7 +39,6 @@ void find_road(ALGraph &G, int u, int v, std::string s, std::vector<std::string>
     visit[u] = 0;
     s.pop_back();
 }
-
 void search_road(ALGraph &G, int u, int v)
 {
     std::string s;
