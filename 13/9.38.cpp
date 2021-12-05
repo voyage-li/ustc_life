@@ -4,7 +4,7 @@ typedef struct BiTNode
     int data;
     struct BiTNode *lchild, *rchild;
 } BiTNode, *BiTree;
-
+// 9.38
 void insert(BiTree &T, int x)
 {
     if (T == nullptr)
@@ -25,7 +25,6 @@ void insert(BiTree &T, int x)
             insert(T->rchild, x);
     }
 }
-
 void together(BiTree &T1, BiTree &T2)
 {
     if (T2 == nullptr)

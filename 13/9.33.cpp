@@ -25,7 +25,7 @@ void insert(BiTree &T, int x)
             insert(T->rchild, x);
     }
 }
-
+// 9.33
 void above_x(BiTree &T, int x)
 {
     if (T == nullptr)

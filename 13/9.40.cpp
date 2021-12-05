@@ -6,7 +6,7 @@ typedef struct BBTNode
     struct BBTNode *lchild, *rchild;
     int lsize;
 } BBTNode, *AVL;
-
+// 9.40
 AVL find_k_small(AVL &T, int k)
 {
     if (T->lsize > k)

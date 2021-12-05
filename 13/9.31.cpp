@@ -4,7 +4,7 @@ typedef struct BiTNode
     int data;
     struct BiTNode *lchild, *rchild;
 } BiTNode, *BiTree;
-
+// 9.31
 bool judge(BiTree &T)
 {
     BiTree p = T;
