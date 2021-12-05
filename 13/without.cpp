@@ -32,7 +32,6 @@ BiTree find(BiTree &T, int x)
             if (p->rchild != nullptr)
                 s.push(p->rchild);
         }
-
         if (p->lchild == nullptr && p->rchild == nullptr)
             break;
     }

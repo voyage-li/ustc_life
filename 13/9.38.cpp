@@ -43,3 +43,16 @@ void together(BiTree &T1, BiTree &T2)
             s.push(now->rchild);
     }
 }
+
+int main()
+{
+    BiTree T = nullptr;
+    int c = 1;
+    std::cin >> c;
+    while (c != 0)
+    {
+        insert(T, c);
+        std::cin >> c;
+    }
+    return 0;
+}
