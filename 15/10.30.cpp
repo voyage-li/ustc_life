@@ -1,7 +1,8 @@
 #include <bits/stdc++.h>
-
-int PartSort(std::vector<int> &array, int left, int right, int &tag)
+int PartSort(std::vector<int> &array, int left, int right)
 {
+    if (left > right)
+        return -1;
     int base = array[left];
     int i = left, j = right;
     int temp;
@@ -13,7 +14,6 @@ int PartSort(std::vector<int> &array, int left, int right, int &tag)
             i++;
         if (i < j)
         {
-            tag = 1;
             temp = array[i];
             array[i] = array[j];
             array[j] = temp;
@@ -23,57 +23,75 @@ int PartSort(std::vector<int> &array, int left, int right, int &tag)
     array[i] = base;
     return i;
 }
+void sort(std::vector<int> &array, int left, int right)
+{
+    for (int i = left; i <= right; i++)
+        for (int j = i; j <= right; j++)
+        {
+            if (array[i] > array[j])
+            {
+                int temp = array[i];
+                array[i] = array[j];
+                array[j] = temp;
+            }
+        }
+}
+
+bool judge(std::vector<int> &array, int left, int right)
+{
+    if (left > right)
+        return false;
+    for (int i = left; i < right; i++)
+        if (array[i] > array[i + 1])
+            return false;
+    return true;
+}
 
 void QuickSortNotR(std::vector<int> &array, int left, int right)
 {
     std::stack<int> s;
     s.push(left);
     s.push(right);
-    int tag = 0;
     while (!s.empty())
     {
         int right = s.top();
         s.pop();
         int left = s.top();
         s.pop();
-
-        int index = PartSort(array, left, right, tag);
-        // if (tag == 0)
-        //     continue;
-        // else
+        if (right - left + 1 <= 3)
         {
-            tag = 0;
-            if ((index - 1) > left && (index + 1) < right)
-            {
-                if (index - left > right - index)
-                {
-                    s.push(left);
-                    s.push(index - 1);
-                    s.push(index + 1);
-                    s.push(right);
-                }
-                else
-                {
-                    s.push(index + 1);
-                    s.push(right);
-                    s.push(left);
-                    s.push(index - 1);
-                }
-            }
-            else if (index - 1 > left)
-            {
-                s.push(left);
-                s.push(index - 1);
-            }
-            else if (index + 1 < right)
-            {
-                s.push(index + 1);
-                s.push(right);
-            }
+            sort(array, left, right);
+            continue;
+        }
+        int index = PartSort(array, left, right);
+        if (index == -1)
+            continue;
+        if (judge(array, left, index - 1))
+        {
+            s.push(index + 1);
+            s.push(right);
+        }
+        else if (judge(array, index + 1, right))
+        {
+            s.push(left);
+            s.push(index - 1);
+        }
+        else if (index - left > right - index)
+        {
+            s.push(left);
+            s.push(index - 1);
+            s.push(index + 1);
+            s.push(right);
+        }
+        else
+        {
+            s.push(index + 1);
+            s.push(right);
+            s.push(left);
+            s.push(index - 1);
         }
     }
 }
-
 int main()
 {
     std::vector<int> a;
