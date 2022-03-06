@@ -29,7 +29,7 @@ int main()
     }
     outfile << "\n\tnop\n\n";
     for (int i = 0; i < data.size(); i += 1)
-        outfile << "\tmovb $0x" << std::hex << data[i] << ", \%al\nmovw $0x3F8, \%dx\noutb \%al, \%dx\nnop" << std::endl;
+        outfile << "\tmovb $0x" << std::hex << data[i] << ", \%al\n\tmovw $0x3F8, \%dx\n\toutb \%al, \%dx\n\tnop" << std::endl;
     outfile << "\thlt" << std::endl;
     outfile.close();
 
