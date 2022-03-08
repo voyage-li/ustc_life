@@ -4,3 +4,5 @@ temp.*
 **/.vscode
 temp
 quick_finish_os_lab1
+*.o
+*.bin

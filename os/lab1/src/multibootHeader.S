@@ -14,6 +14,7 @@ CHECKSUM_ITEM_NAME=0xe4524ffe
 .code32
 
 start:
+	/*VGA*/
 	movl $0x2f652f48, 0xb8000
 	movl $0x2f6c2f6c, 0xb8004
 	movl $0x2f202f6f, 0xb8008
@@ -25,9 +26,10 @@ start:
 	movl $0x2f302f30, 0xb8020
 	movl $0x2f312f30, 0xb8024
 	movl $0x2f372f33, 0xb8028
+	movl $0x2f6c2f5f, 0xb802c
+	movl $0x2f682f79, 0xb8030
 
-	nop
-
+	/*串口*/
 	movb $0x48, %al
 	movw $0x3F8, %dx
 	outb %al, %dx
@@ -116,4 +118,21 @@ start:
 	movw $0x3F8, %dx
 	outb %al, %dx
 	nop
+	movb $0x5f, %al
+	movw $0x3F8, %dx
+	outb %al, %dx
+	nop
+	movb $0x6c, %al
+	movw $0x3F8, %dx
+	outb %al, %dx
+	nop
+	movb $0x79, %al
+	movw $0x3F8, %dx
+	outb %al, %dx
+	nop
+	movb $0x68, %al
+	movw $0x3F8, %dx
+	outb %al, %dx
+	nop
+
 	hlt
