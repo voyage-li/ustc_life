@@ -113,7 +113,10 @@ void append2screen(char *str, int color)
     {
         unsigned short int pos = get_cursor_pos();
         if (pos >= VGA_SCREEN_HEIGHT * VGA_SCREEN_WIDTH)
+        {
             scroll_screen();
+            pos = get_cursor_pos();
+        }
         if (*(str + i) == '\n')
             set_cursor_pos((pos / 80 + 1) * 80);
         else
