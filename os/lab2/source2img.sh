@@ -4,9 +4,9 @@ make clean
 
 make
 
-if [ $status -ne 0 ]
+if [ $? -ne 0 ]; then
 	echo "make failed"
 else
 	echo "make succeed"
 	qemu-system-i386 -kernel output/myOS.elf -serial stdio
-end
+fi

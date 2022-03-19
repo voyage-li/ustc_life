@@ -11,3 +11,11 @@ unsigned char inb(unsigned short int port_from) {
 void outb(unsigned short int port_to, unsigned char value) {
     __asm__ __volatile__ ("outb %b0, %w1":: "a"(value), "Nd"(port_to));
 }
+
+int strlen(char *str)
+{
+    int len = 0;
+    while (*(str + len) != '\0')
+        len++;
+    return len;
+}
