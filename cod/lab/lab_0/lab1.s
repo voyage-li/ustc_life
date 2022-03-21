@@ -12,7 +12,6 @@ main:
     la a0, str
     li a7, 4
     ecall
-    # jal printNewline
 
 	jal init
     jal loopPrint
@@ -22,9 +21,9 @@ main:
 	li a7, 4
     la a0, newline
     ecall
-
+	
+	# 调用部分
 	andi t0, a0, 0
-	# addi t0, t0, 1
 	addi t2, a1, 0
 	jal sort
 	
@@ -54,7 +53,7 @@ loopPrint:
     	li a7, 4
     	la a0, delimiter
     	ecall
-    	# Increment
+    	# Increment	
     	addi t0, t0, 1
 	    blt  t0, t1, loop
     jr x1
