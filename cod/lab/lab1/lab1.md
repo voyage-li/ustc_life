@@ -148,11 +148,17 @@
 - RTL 电路
   ![](./src/alu6_rtl.png)
 - 综合电路
-  ![](./src/sy_alu6.png)
+
+  <img src="./src/sy_alu6.png" style="width:60%">
+
 - 综合电路资源使用情况
-  ![](./src/ul_alu6.png)
+
+  <img src="./src/ul_alu6.png" style="width:60%">
+
 - ALU 模块时间性能报告
   ![](./src/timing_alu6.png)
+- 仿真图像
+  ![](./src/alu_sim.png)
 
 ##### （3）Fibonacci 数列的计算
 
