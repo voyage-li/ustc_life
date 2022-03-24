@@ -334,3 +334,57 @@
       return cnt;
   }
   ```
+
+##### 3. 源代码组织说明
+
+- 项目结构
+  ```bash
+  ../lab2
+  ├── Makefile
+  ├── multibootheader
+  │   └── multibootHeader.S
+  ├── myOS
+  │   ├── dev
+  │   │   ├── Makefile
+  │   │   ├── uart.c
+  │   │   └── vga.c
+  │   ├── i386
+  │   │   ├── io.c
+  │   │   └── Makefile
+  │   ├── include
+  │   │   ├── io.h
+  │   │   ├── myPrintk.h
+  │   │   ├── uart.h
+  │   │   ├── vga.h
+  │   │   └── vsprintf.h
+  │   ├── lib
+  │   │   ├── Makefile
+  │   │   └── vsprintf.c
+  │   ├── Makefile
+  │   ├── myOS.ld
+  │   ├── osStart.c
+  │   ├── printk
+  │   │   ├── Makefile
+  │   │   └── myPrintk.c
+  │   ├── start32.S
+  │   └── userInterface.h
+  ├── source2img.sh
+  └── userApp
+      ├── main.c
+      └── Makefile
+  ```
+- Makefile 组织
+
+##### 4. 代码布局说明
+
+#### 四、编译过程
+
+直接运行脚本文件
+
+```bash
+./source2img.sh
+```
+
+#### 五、运行结果
+
+![](./src/result.png)
