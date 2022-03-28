@@ -58,7 +58,7 @@ void scroll_screen(void)
         unsigned short int *p;
         p = (unsigned short int *)(i * 2 + VGA_BASE);
         unsigned char blank = ' ';
-        int color = 10;
+        int color = 7;
         unsigned short int data = 0;
         data += color << 8;
         data += blank;
@@ -93,7 +93,7 @@ void clear_screen(void)
         unsigned short int *p;
         p = (unsigned short int *)(i * 2 + VGA_BASE);
         unsigned char blank = ' ';
-        int color = 10;
+        int color = 7;
         unsigned short int data = 0;
         data += color << 8;
         data += blank;

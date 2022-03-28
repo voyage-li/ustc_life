@@ -14,19 +14,13 @@
 #### 二、实验原理
 
 - 软件的架构(框图)
-  ![]()
+  ![](./src/block.jpg)
 
 #### 三、实验过程
 
 ##### 1. 代码的主流程及其实现
 
-```mermaid
-    graph LR
-        mulitbootHeader.s--"call _start"-->start32.S
-        start32.S-->establish_stack
-        establish_stack-->zero_bss
-        zero_bss--to_main-->osStart.c
-```
+![](./src/fl.jpg)
 
 ##### 2. 主要功能模块及其实现
 
@@ -87,7 +81,7 @@
              unsigned short int *p;
              p = (unsigned short int *)(i * 2 + VGA_BASE);
              unsigned char blank = ' ';
-             int color = 10;
+             int color = 7;
              unsigned short int data = 0;
              data += color << 8;
              data += blank;
@@ -128,7 +122,7 @@
              unsigned short int *p;
              p = (unsigned short int *)(i * 2 + VGA_BASE);
              unsigned char blank = ' ';
-             int color = 10;
+             int color = 7;
              unsigned short int data = 0;
              data += color << 8;
              data += blank;
@@ -375,7 +369,36 @@
   ```
 - Makefile 组织
 
+```bash
+.
+├── MULTI_BOOT_HEADER
+│   └── output/multibootheader/multibootHeader.o
+└── OS_OBJS
+    ├── MYOS_OBJS
+    │   ├── output/myOS/osStart.o
+    │   ├── output/myOS/start32.o
+    │   ├── DEV_OBJS
+    │   │   ├── output/myOS/dev/uart.o
+    │   │   └── output/myOS/dev/vga.o
+    │   ├── I386_OBJS
+    │   │   └── output/myOS/i386/io.o
+    │   ├── PRINTK_OBJS
+    │   │   └── output/myOS/printk/myPrintk.o
+    │   └── LIB_OBJS
+    │       └── output/myOS/lib/vsprintf.o
+    └── USER_APP_OBJS
+        └──output/userApp/main.o
+```
+
 ##### 4. 代码布局说明
+
+| Section           | Offset (Base = 1M) |
+| ----------------- | ------------------ |
+| .multiboot_header | 0                  |
+| .text             | 8                  |
+| .data             | 16                 |
+| .bss              | 16                 |
+| \_end             | 0x101090           |
 
 #### 四、编译过程
 
@@ -385,6 +408,19 @@
 ./source2img.sh
 ```
 
+脚本的执行:
+
+- 编译各个文件，生成相应的 .o 目标文件
+- 根据链接描述文件，将各 .o 目标文件进行链接，生成`myOS.elf`文件
+- 使用 qemu，调用上一步生成的文件，进行模拟
+
 #### 五、运行结果
 
 ![](./src/result.png)
+
+#### 六、实验收获
+
+- 熟悉了汇编到 C 的过程
+- 熟悉了操作系统相关的接口
+- 学习了 shell 脚本
+- 学习了 makefile 的组织结构
