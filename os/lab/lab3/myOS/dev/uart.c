@@ -1,22 +1,26 @@
-#include "uart.h"
 #include "io.h"
+#define uart_base 0x3F8
 
-#define UART_PORT 0x3F8 // 串口端口号
-
-/* 向串口输出一个字符
- * 使用封装好的 outb 函数 */
-void uart_put_char(unsigned char ch)
+unsigned char uart_get_char(void)
 {
-    /* todo */
-    outb(UART_PORT, ch);
+	while (!(inb(uart_base+5)&1));
+	return inb(uart_base);
 }
 
-/* 向串口输出一个字符串
- * 此函数接口禁止修改 */
-void uart_put_chars(char *str)
+void uart_put_char(unsigned char c)
 {
-    /* todo */
-    int len = strlen(str);
-    for (int i = 0; i < len; i++)
-        uart_put_char(*(str + i));
+    if (c == '\n') {
+        outb(uart_base, '\r');
+        outb(uart_base, '\n');
+        return;
+    }
+    outb(uart_base, c);
+}
+
+void uart_put_chars(char* str)
+{
+	char *p;
+    for (p = str; *p; ++p) {
+        uart_put_char(*p);
+    }
 }
