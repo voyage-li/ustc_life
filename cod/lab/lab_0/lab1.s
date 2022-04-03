@@ -22,7 +22,7 @@ main:
     la a0, newline
     ecall
 	
-	# 调用部分
+	# ???ò???
 	andi t0, a0, 0
 	addi t2, a1, 0
 	jal sort

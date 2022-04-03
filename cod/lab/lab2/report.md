@@ -1,4 +1,4 @@
-## Lab1 寄存器堆与存储器及其应用
+## Lab2 寄存器堆与存储器及其应用
 
 <p style="text-align:right"> 李远航</p>
 <p style="text-align:right"> PB20000137</p>
@@ -46,7 +46,7 @@
 ##### (2)IP 例化分布式和块式 16 x 8 位单端口 RAM
 
 - 功能仿真
-  spo1 端口为分布式 RAM 输出，douta 为块式 RAM 输出，两种 ip 核共用 a1 地址端口和 d1 数据端口
+  spo1 端口为分布式 RAM 输出，dout_w,dout_r,dout 分别为块式 RAM 输出的先写，先读，无改变，两种 ip 核共用 a1 地址端口和 d1 数据端口
   ![](./src/RAM_sim.png)
 
 ##### (3)用三端口 8×4 寄存器堆实现最大长度为 8 的 FIFO 队列
@@ -57,6 +57,7 @@
 
 <style>
   img.big{
+    width: 80%;
     padding: 0px 0px 120px 0px ;
   }
 </style>
@@ -240,9 +241,21 @@
   ```
 
 - 功能仿真
-  ![](./src/FIFO_sim.png)
+
+  <img src="./src/FIFO_sim.png" style="width:80%">
+
 - VGA 测试
 
-  <img src="./src/zeo.png" style="width:60%">
-  <img src="./src/en.png" style="width:60%">
-  <img src="./src/dequ.png" style="width:60%">
+    <img src="./src/zeo.png" style="width:50%">
+
+  &nbsp;
+
+    <img src="./src/en.png" style="width:50%">
+
+    <img src="./src/dequ.png" style="width:50%">
+
+#### 3. 实验收获
+
+- 学习了寄存器堆及其应用
+- 学习了 ip 核的使用，区分分布式和块式 RAM
+- 进一步熟悉了状态机的设计与书写
