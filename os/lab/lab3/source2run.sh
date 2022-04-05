@@ -1,5 +1,6 @@
 #!/bin/bash
-SRC_RT=$(shell pwd)
+
+SRC_RT=$(pwd)
 echo $SRC_RT
 make clean
 make

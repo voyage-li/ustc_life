@@ -4,7 +4,7 @@
 
 #define VGA_BASE 0xB8000     // vga 显存起始地址
 #define VGA_SCREEN_WIDTH 80  // vga 屏幕宽度（可容纳字符数）
-#define VGA_SCREEN_HEIGHT 25 // vga 屏幕高度
+#define VGA_SCREEN_HEIGHT 24 // vga 屏幕高度
 
 #define CURSOR_LINE_REG 0xE     // 行号寄存器
 #define CURSOR_COL_REG 0xF      // 列号寄存器
@@ -73,13 +73,21 @@ void scroll_screen(void)
 void put_char2pos(unsigned char c, int color, unsigned short int pos)
 {
     /* todo */
-    unsigned short int data = 0;
-    data += color << 8;
-    data += c;
-    unsigned short int *p;
-    p = (unsigned short int *)(pos * 2 + VGA_BASE);
-    *p = data;
-    set_cursor_pos(pos + 1);
+    if (c == '\b')
+    {
+        set_cursor_pos(pos - 1);
+    }
+    else
+    {
+
+        unsigned short int data = 0;
+        data += color << 8;
+        data += c;
+        unsigned short int *p;
+        p = (unsigned short int *)(pos * 2 + VGA_BASE);
+        *p = data;
+        set_cursor_pos(pos + 1);
+    }
 }
 
 /* ========= 以下函数接口禁止修改 ========= */

@@ -37,11 +37,11 @@ int func_cmd(int argc, char (*argv)[8])
 
 int judge_command(char *str)
 {
-    if (str[0] == 'c' && str[1] == 'm' && str[2] == 'd')
+    if (str[0] == 'c' && str[1] == 'm' && str[2] == 'd' && str[3] == '\0')
         return 1;
-    if (str[0] == 'h' && str[1] == 'e' && str[2] == 'l' && str[3] == 'p')
+    if (str[0] == 'h' && str[1] == 'e' && str[2] == 'l' && str[3] == 'p' && str[4] == '\0')
         return 2;
-    if (str[0] == 'c' && str[1] == 'l' && str[2] == 'e' && str[3] == 'a' && str[4] == 'r')
+    if (str[0] == 'c' && str[1] == 'l' && str[2] == 'e' && str[3] == 'a' && str[4] == 'r' && str[5] == '\0')
         return 3;
     return 0;
 }
@@ -114,11 +114,19 @@ void startShell(void)
 
         while ((BUF[BUF_len] = uart_get_char()) != '\r')
         {
+            if (BUF[BUF_len] == 127)
+            {
+                myPrintk(0x7, "\b \b");
+                BUF_len--;
+                continue;
+            }
             uart_put_char(BUF[BUF_len]); //将串口输入的数存入BUF数组中
             str_for_out[0] = BUF[BUF_len];
             myPrintk_only_vga(0x7, str_for_out);
+            myPrintk_only_vga(0x7, "%d", BUF[BUF_len]);
             BUF_len++; // BUF数组的长度加
         }
+        BUF[BUF_len] = '\0';
         uart_put_chars(" -pseudo_terminal\0");
 
         myPrintk(0x7, "\n");
@@ -137,8 +145,11 @@ void startShell(void)
             func_help(argc, argv);
         else if (judge_command(argv[0]) == 3)
             func_clear(argc, argv);
+        else if (BUF[0] == '\0')
+        {
+        }
         else
-            myPrintk(0x7, "Command not found!\n");
+            myPrintk(0x7, "Command %s not found!\n", BUF);
 
     } while (1);
 }

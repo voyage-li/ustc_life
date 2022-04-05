@@ -65,11 +65,11 @@ test:
 
 程序运行最后的数据映像:
 
-![](./q2.png)
+<img src="./q2.png" style="width:80%">
 
 生成 coe 文件如下所示:
 
-![](./coe.png)
+<img src="./coe.png" style="width:65%">
 
 ##### (3) Rars 软件设计汇编程序，实现计算斐波那契—卢卡斯数列（数列前两项为 1，2），并生成 COE 文件
 
@@ -79,7 +79,7 @@ test:
 .data
 first:      .word       1
 second:     .word       2
-goal:       .word       10
+goal:       .word       20
 outans:     .word       0
 
 .text
@@ -96,20 +96,27 @@ loop:
     add t3, a1, a2
     add a1, x0, a2
     add a2, x0, t3
-	addi t2, t2, 1
+    addi t2, t2, 1
     jal loop
 exit:
     la t3, outans
     sw a1, 0(t3)
+    addi a0, a1, 0
+    li a7, 1
+    ecall
     li a7 10
     ecall
 ```
 
 该程序通过 label:`goal`取得需要计算的第 goal 项元素,并将计算得到的结果,储存到`outans`处
 
-测试`goal`=10 时，代码段的输出:
-![](./data.png)
-计算可以发现第 10 项的值与该汇编程序计算出的答案相同
+测试`goal`=20 时，console 的输出:
+<img src="./data.png" style="width:80%">
+
+计算可以发现第 20 项的值与该汇编程序计算出的答案相同
+coe 文件:
+
+<img src="./fib_coe.png" style="width:70%">
 
 #### 4. 实验收获
 
