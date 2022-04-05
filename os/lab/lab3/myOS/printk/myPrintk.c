@@ -3,9 +3,8 @@
 #include "vsprintf.h"
 #include <stdarg.h>
 
-
 char kBuf[400];
-int myPrintk(int color, const char* format, ...)
+int myPrintk(int color, const char *format, ...)
 {
     va_list args;
     va_start(args, format);
@@ -17,7 +16,7 @@ int myPrintk(int color, const char* format, ...)
 }
 
 char uBuf[400];
-int myPrintf(int color, const char* format, ...)
+int myPrintf(int color, const char *format, ...)
 {
     va_list args;
     va_start(args, format);
@@ -25,5 +24,16 @@ int myPrintf(int color, const char* format, ...)
     va_end(args);
     append2screen(uBuf, color);
     uart_put_chars(uBuf);
+    return count;
+}
+
+char vga_Buf[400];
+int myPrintk_only_vga(int color, const char *format, ...)
+{
+    va_list args;
+    va_start(args, format);
+    int count = mySprintf(vga_Buf, format, args);
+    va_end(args);
+    append2screen(vga_Buf, color);
     return count;
 }
