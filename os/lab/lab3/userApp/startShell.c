@@ -17,10 +17,12 @@ typedef struct myCommand
 int func_cmd(int argc, char (*argv)[8]);
 int func_help(int argc, char (*argv)[8]);
 int func_clear(int argc, char (*argv)[8]);
+int func_echo(int argc, char (*argv)[8]);
 
 myCommand cmd = {"cmd\0", "List all command", func_cmd};
 myCommand help = {"help\0", "Usage: help [command]\nDisplay info about [command]", func_help};
 myCommand clear = {"clear\0", "clear the screen", func_clear};
+myCommand echo = {"echo\0", "Usage: echo [content]\nprintf [content]", func_echo};
 
 int func_cmd(int argc, char (*argv)[8])
 {
@@ -33,6 +35,9 @@ int func_cmd(int argc, char (*argv)[8])
     myPrintk(0x7, "3.  ");
     myPrintk(0x7, clear.name);
     myPrintk(0x7, "\n");
+    myPrintk(0x7, "4.  ");
+    myPrintk(0x7, echo.name);
+    myPrintk(0x7, "\n");
 }
 
 int judge_command(char *str)
@@ -43,6 +48,8 @@ int judge_command(char *str)
         return 2;
     if (str[0] == 'c' && str[1] == 'l' && str[2] == 'e' && str[3] == 'a' && str[4] == 'r' && str[5] == '\0')
         return 3;
+    if (str[0] == 'e' && str[1] == 'c' && str[2] == 'h' && str[3] == 'o' && str[4] == '\0')
+        return 4;
     return 0;
 }
 
@@ -58,6 +65,8 @@ int func_help(int argc, char (*argv)[8])
             myPrintk(0x7, help.help_content);
         else if (judge_command(argv[1]) == 3)
             myPrintk(0x7, clear.help_content);
+        else if (judge_command(argv[1]) == 4)
+            myPrintk(0x7, echo.help_content);
         else
             myPrintk(0x7, "No Such Command please use cmd to see more information");
     }
@@ -67,6 +76,12 @@ int func_help(int argc, char (*argv)[8])
 int func_clear(int argc, char (*argv)[8])
 {
     clear_screen();
+}
+
+int func_echo(int argc, char (*argv)[8])
+{
+    myPrintk(0x7, argv[1]);
+    myPrintk(0x7, "\n");
 }
 
 int split(char *str, char (*argv)[8], int len)
@@ -107,14 +122,21 @@ void startShell(void)
     do
     {
         BUF_len = 0;
-        myPrintk(0xa, "voyage@qemu\0");
-        myPrintk(0x7, "$ ");
+        myPrintk_only_vga(0xa, "voyage@qemu");
+        myPrintk_only_vga(0xf, "$ ");
+
+        uart_put_chars("\e[32;1mvoyage@qemu\e[0m\e[1m$ \e[0m");
+
         char str_for_out[2];
         str_for_out[1] = '\0';
 
         while ((BUF[BUF_len] = uart_get_char()) != '\r')
         {
-            if (BUF[BUF_len] == 127)
+            if (BUF[BUF_len] == 127 && BUF_len == 0)
+            {
+                continue;
+            }
+            else if (BUF[BUF_len] == 127)
             {
                 myPrintk(0x7, "\b \b");
                 BUF_len--;
@@ -123,11 +145,9 @@ void startShell(void)
             uart_put_char(BUF[BUF_len]); //将串口输入的数存入BUF数组中
             str_for_out[0] = BUF[BUF_len];
             myPrintk_only_vga(0x7, str_for_out);
-            myPrintk_only_vga(0x7, "%d", BUF[BUF_len]);
             BUF_len++; // BUF数组的长度加
         }
         BUF[BUF_len] = '\0';
-        uart_put_chars(" -pseudo_terminal\0");
 
         myPrintk(0x7, "\n");
         // OK,助教已经帮助你们实现了“从串口中读取数据存储到BUF数组中”的任务，接下来你们要做
@@ -145,11 +165,16 @@ void startShell(void)
             func_help(argc, argv);
         else if (judge_command(argv[0]) == 3)
             func_clear(argc, argv);
+        else if (judge_command(argv[0]) == 4)
+            func_echo(argc, argv);
         else if (BUF[0] == '\0')
         {
         }
         else
-            myPrintk(0x7, "Command %s not found!\n", BUF);
-
+        {
+            myPrintk(0x7, "Command");
+            myPrintk(0xf, " %s ", BUF);
+            myPrintk(0x7, "not found!\n");
+        }
     } while (1);
 }
