@@ -26,18 +26,23 @@ myCommand echo = {"echo\0", "Usage: echo [content]\nprintf [content]", func_echo
 
 int func_cmd(int argc, char (*argv)[8])
 {
-    myPrintk(0x7, "1.  ");
-    myPrintk(0x7, cmd.name);
-    myPrintk(0x7, "\n");
-    myPrintk(0x7, "2.  ");
-    myPrintk(0x7, help.name);
-    myPrintk(0x7, "\n");
-    myPrintk(0x7, "3.  ");
-    myPrintk(0x7, clear.name);
-    myPrintk(0x7, "\n");
-    myPrintk(0x7, "4.  ");
-    myPrintk(0x7, echo.name);
-    myPrintk(0x7, "\n");
+    if (argc != 1)
+        myPrintk(0x7, "unrecognized command line option\n\n");
+    else
+    {
+        myPrintk(0x7, "1.  ");
+        myPrintk(0x7, cmd.name);
+        myPrintk(0x7, "\n");
+        myPrintk(0x7, "2.  ");
+        myPrintk(0x7, help.name);
+        myPrintk(0x7, "\n");
+        myPrintk(0x7, "3.  ");
+        myPrintk(0x7, clear.name);
+        myPrintk(0x7, "\n");
+        myPrintk(0x7, "4.  ");
+        myPrintk(0x7, echo.name);
+        myPrintk(0x7, "\n");
+    }
 }
 
 int judge_command(char *str)
@@ -75,7 +80,10 @@ int func_help(int argc, char (*argv)[8])
 
 int func_clear(int argc, char (*argv)[8])
 {
-    clear_screen();
+    if (argc != 1)
+        myPrintk(0x7, "unrecognized command line option\n");
+    else
+        clear_screen();
 }
 
 int func_echo(int argc, char (*argv)[8])

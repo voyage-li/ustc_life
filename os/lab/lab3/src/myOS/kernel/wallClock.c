@@ -1,5 +1,17 @@
 #include "wallClock.h"
 
+void (*wallClock_hook)(int, int, int) = 0;
+void oneTickUpdateWallClock(int HH, int MM, int SS)
+{
+    if (wallClock_hook)
+        wallClock_hook(HH, MM, SS);
+}
+
+void setWallClockHook(void (*func)(int, int, int))
+{
+    wallClock_hook = func;
+}
+
 void setWallClock(int HH, int MM, int SS)
 {
     //你需要填写它
@@ -25,6 +37,7 @@ void setWallClock(int HH, int MM, int SS)
         *p = data;
         p += 1;
     }
+    return;
 }
 
 void getWallClock(int *HH, int *MM, int *SS)
@@ -53,4 +66,5 @@ void getWallClock(int *HH, int *MM, int *SS)
     p += 2;
     c = (*p) & 0xff;
     *SS += (c - '0');
+    return;
 }
