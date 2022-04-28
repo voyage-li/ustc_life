@@ -157,7 +157,8 @@ unsigned long dPartitionFreeFirstFit(unsigned long dp, unsigned long start)
     */
     dPartition *handler = (dPartition *)dp;
     start -= sizeof(unsigned long);
-    if (start <= dp + sizeof(dPartition) || start >= dp + handler->size)
+    // myPrintk(0x7, "\nstart: %x\n", start);
+    if (start < dp + sizeof(dPartition) || start > dp + handler->size)
         return 0;
 
     unsigned long now_addr = handler->firstFreeStart;
@@ -177,6 +178,8 @@ unsigned long dPartitionFreeFirstFit(unsigned long dp, unsigned long start)
         }
         now_addr = block->nextStart;
     }
+
+    // myPrintk(0x7, "now_addr: %x\npre_addr: %x\n", now_addr, pre_addr);
 
     block = (EMB *)start;
     if (next_addr != 0)

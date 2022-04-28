@@ -96,7 +96,6 @@ int testdP1(int argc, unsigned char **argv){
 				myPrintf(0x5, "failed!\n");
 				break;
 			}
-			
 			i <<= 1;
 		}
 
@@ -180,7 +179,8 @@ int testeFP(int argc, unsigned char **argv){
 	//======for eFPartition===============================
 	
 	tsize = eFPartitionTotalSize(psize,n);
-	x = malloc(tsize); myPrintf(0x7,"X:0x%x:%d \n",x,tsize);
+	x = malloc(tsize); 
+    myPrintf(0x7,"X:0x%x:%d \n",x,tsize);
 	if (x) {
 		myPrintf(0x7, "We had successfully ");
 		myPrintf(0x5, "malloc()");
@@ -259,7 +259,7 @@ int testdP3(int argc, unsigned char **argv){
 		xHandler = dPartitionInit(x,tsize);
 		dPartitionWalkByAddr(x);
 
-		myPrintf(0x7,"Now, A:B:C:- ==> -:B:C:- ==> -:C- ==> - .\n");
+		myPrintf(0x7,"Now, A:B:C:- ==> A:B:- ==> A:- ==> - .\n");
 
 		x1 = dPartitionAlloc(xHandler,0x10); 
 		myPrintf(0x7, "Alloc memBlock A with size 0x10: ");
@@ -282,7 +282,7 @@ int testdP3(int argc, unsigned char **argv){
 		*(unsigned long*)x3 = 0xCCCCCCCC;		
 		dPartitionWalkByAddr(xHandler);
 		
-		myPrintf(0x7,"At last, release C.\n");
+		myPrintf(0x7,"Now, release C.\n");
 		dPartitionFree(xHandler,x3); 
 		dPartitionWalkByAddr(xHandler);
 
@@ -290,7 +290,7 @@ int testdP3(int argc, unsigned char **argv){
 		dPartitionFree(xHandler,x2); 
 		dPartitionWalkByAddr(xHandler);
 
-		myPrintf(0x7,"Now, release A.\n");
+		myPrintf(0x7,"At last, release A.\n");
 		dPartitionFree(xHandler,x1); 
 		dPartitionWalkByAddr(xHandler);
 		

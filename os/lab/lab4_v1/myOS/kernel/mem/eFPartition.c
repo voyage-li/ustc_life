@@ -93,7 +93,7 @@ unsigned long eFPartitionInit(unsigned long start, unsigned long perSize, unsign
     {
         block = (EEB *)addr;
         addr += perSize;
-        if (n == 1)
+        if (n == 0)
             block->next_start = 0;
         else
             block->next_start = addr;

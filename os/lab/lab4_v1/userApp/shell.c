@@ -136,12 +136,10 @@ int clear(int argc, unsigned char **argv)
 
 struct cmd *findCmd(unsigned char *cmd)
 {
-    myPrintf(0x7, "find %s\n", cmd);
     struct cmd *tmpCmd = ourCmds;
     int found = 0;
     while (tmpCmd != NULL)
     { // at lease 2 cmds
-        myPrintf(0x7, "src %s\n", tmpCmd->cmd);
         if (strcmp(cmd, tmpCmd->cmd) == 0)
         {
             found = 1;
