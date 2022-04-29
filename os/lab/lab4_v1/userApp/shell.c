@@ -132,6 +132,7 @@ int help(int argc, unsigned char **argv)
 int clear(int argc, unsigned char **argv)
 {
     // to be done
+    clear_the_screen();
 }
 
 struct cmd *findCmd(unsigned char *cmd)
@@ -192,7 +193,7 @@ void initShell(void)
     // TODO: may be we can add a new command exit or quit
 }
 
-unsigned char cmdline[100];
+unsigned char cmdline[256]; //输入缓存区
 void startShell(void)
 {
     unsigned char *argv[10]; // max 10
@@ -200,11 +201,38 @@ void startShell(void)
     struct cmd *tmpCmd;
     // myPrintf(0x7,"StartShell:\n");
 
+    int BUF_len = 0; //输入缓存区的长度
+
     while (1)
     {
-        myPrintf(0x3, "Student >:");
-        getCmdline(&cmdline[0], 100);
-        myPrintf(0x7, cmdline);
+        myPrintk_only_vga(0xa, "voyage@qemu");
+        myPrintk_only_vga(0xf, "$ ");
+        uart_put_chars("\e[32;1mvoyage@qemu\e[0m\e[1m$ \e[0m");
+
+        char str_for_out[2];
+        str_for_out[1] = '\0';
+        BUF_len = 0;
+        while ((cmdline[BUF_len] = uart_get_char()) != '\r')
+        {
+            if (cmdline[BUF_len] == 127 && BUF_len == 0)
+            {
+                continue;
+            }
+            else if (cmdline[BUF_len] == 127)
+            {
+                myPrintf(0x7, "\b \b");
+                BUF_len--;
+                continue;
+            }
+            uart_put_char(cmdline[BUF_len]); //将串口输入的数存入BUF数组中
+            str_for_out[0] = cmdline[BUF_len];
+            myPrintk_only_vga(0x7, str_for_out);
+            BUF_len++; // BUF数组的长度加
+        }
+        cmdline[BUF_len] = '\0';
+        myPrintf(0x7, "\n");
+
+        // getCmdline(&cmdline[0], 100);
 
         argc = split2Words(cmdline, &argv[0], 10);
         if (argc == 0)

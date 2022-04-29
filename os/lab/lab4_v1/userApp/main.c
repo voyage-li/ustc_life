@@ -9,7 +9,7 @@ void wallClock_hook_main(void){
 
 	getWallClock(&_h,&_m,&_s);
 	sprintf(hhmmss,"%02d:%02d:%02d",_h,_m,_s);
-	put_chars(hhmmss,0x7E,24,72);
+	put_chars(hhmmss,0x2,24,72);
 }
 
 void doSomeTestBefore(void){		
