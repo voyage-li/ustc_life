@@ -1,0 +1,16 @@
+--cpu=Cortex-M4.fp
+"..\obj\startup_stm32f40_41xxx.o"
+"..\obj\main.o"
+"..\obj\stm32f4xx_it.o"
+"..\obj\system_stm32f4xx.o"
+"..\obj\delay.o"
+"..\obj\sys.o"
+"..\obj\usart.o"
+"..\obj\misc.o"
+"..\obj\stm32f4xx_gpio.o"
+"..\obj\stm32f4xx_rcc.o"
+"..\obj\stm32f4xx_syscfg.o"
+"..\obj\stm32f4xx_usart.o"
+--ro-base 0x08000000 --entry 0x08000000 --rw-base 0x20000000 --entry Reset_Handler --first __Vectors --strict --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list ".\Listings\lab.map" -o ..\OBJ\lab.axf
