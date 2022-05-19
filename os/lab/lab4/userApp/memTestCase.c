@@ -91,7 +91,7 @@ int testdP1(int argc, unsigned char **argv){
 			if(x1) {	
 				myPrintf(0x5, "success(addr=0x%x)!",x1);
 				dPartitionFree(xHandler,x1);
-				myPrintf(0x7, "......Relaesed;\n");
+				myPrintf(0x7, "......Released;\n");
 			} else {
 				myPrintf(0x5, "failed!\n");
 				break;
@@ -106,7 +106,7 @@ int testdP1(int argc, unsigned char **argv){
 			if(x1) {	
 				myPrintf(0x5, "success(addr=0x%x)!",x1);
 				dPartitionFree(xHandler,x1);
-				myPrintf(0x7, "......Relaesed;\n");
+				myPrintf(0x7, "......Released;\n");
 			} else myPrintf(0x5, "failed!\n");
 			
 			i >>= 1;

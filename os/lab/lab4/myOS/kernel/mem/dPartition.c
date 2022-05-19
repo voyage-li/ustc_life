@@ -50,7 +50,7 @@ unsigned long dPartitionInit(unsigned long start, unsigned long totalSize)
     handler->firstFreeStart = start + sizeof(dPartition);
 
     EMB *block = (EMB *)handler->firstFreeStart;
-    block->size = totalSize - sizeof(dPartition);
+    block->size = totalSize - sizeof(dPartition) - sizeof(EMB);
     block->nextStart = 0;
 
     return start;
@@ -110,30 +110,30 @@ unsigned long dPartitionAllocFirstFit(unsigned long dp, unsigned long size)
     {
         block_now = (EMB *)now_addr;
         block_pre = (EMB *)pre_addr;
-        if (block_now->size >= size + sizeof(unsigned long))
+        if (block_now->size >= size)
         {
             //直接整个块分配
-            if (block_now->size < sizeof(EMB) + size + sizeof(unsigned long))
+            if (block_now->size < sizeof(EMB) + size)
             {
                 if (pre_addr == 0)
                     handler->firstFreeStart = block_now->nextStart;
                 else
                     block_pre->nextStart = block_now->nextStart;
-                return now_addr + sizeof(unsigned long);
+                return now_addr + sizeof(EMB);
             }
             else
             //切分该空闲块
             {
-                unsigned long new_block_addr = now_addr + sizeof(unsigned long) + size;
+                unsigned long new_block_addr = now_addr + sizeof(EMB) + size;
                 EMB *block_new = (EMB *)new_block_addr;
-                block_new->size = block_now->size - size - sizeof(unsigned long);
+                block_new->size = block_now->size - size - sizeof(EMB);
                 block_new->nextStart = block_now->nextStart;
-                block_now->size -= block_new->size;
+                block_now->size -= block_new->size + sizeof(EMB);
                 if (pre_addr == 0)
                     handler->firstFreeStart = new_block_addr;
                 else
                     block_pre->nextStart = new_block_addr;
-                return now_addr + sizeof(unsigned long);
+                return now_addr + sizeof(EMB);
             }
         }
         pre_addr = now_addr;
@@ -156,7 +156,7 @@ unsigned long dPartitionFreeFirstFit(unsigned long dp, unsigned long start)
     3.需要考虑两个空闲且相邻的内存块的合并
     */
     dPartition *handler = (dPartition *)dp;
-    start -= sizeof(unsigned long);
+    start -= sizeof(EMB);
     // myPrintk(0x7, "\nstart: %x\n", start);
     if (start < dp + sizeof(dPartition) || start > dp + handler->size)
         return 0;
@@ -180,14 +180,13 @@ unsigned long dPartitionFreeFirstFit(unsigned long dp, unsigned long start)
     }
 
     // myPrintk(0x7, "now_addr: %x\npre_addr: %x\n", now_addr, pre_addr);
-
     block = (EMB *)start;
     if (next_addr != 0)
     {
-        if (start + block->size == next_addr)
+        if (start + block->size + sizeof(EMB) == next_addr)
         {
             EMB *next_block = (EMB *)next_addr;
-            block->size += next_block->size;
+            block->size += next_block->size + sizeof(EMB);
             block->nextStart = next_block->nextStart;
         }
         else
@@ -199,9 +198,9 @@ unsigned long dPartitionFreeFirstFit(unsigned long dp, unsigned long start)
     if (pre_addr != 0)
     {
         EMB *pre_block = (EMB *)pre_addr;
-        if (start == pre_addr + pre_block->size)
+        if (start == pre_addr + pre_block->size + sizeof(EMB))
         {
-            pre_block->size += block->size;
+            pre_block->size += block->size + sizeof(EMB);
             pre_block->nextStart = block->nextStart;
         }
         else

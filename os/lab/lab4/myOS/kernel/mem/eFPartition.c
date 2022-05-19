@@ -67,7 +67,7 @@ unsigned long eFPartitionTotalSize(unsigned long perSize, unsigned long n)
         }EEB;
     3.最后别忘记加上eFPartition这个数据结构的大小，因为它也占一定的空间。
     */
-    return (align4(perSize) + sizeof(unsigned long)) * n + sizeof(eFPartition);
+    return (align4(perSize) + sizeof(EEB)) * n + sizeof(eFPartition);
 }
 
 unsigned long eFPartitionInit(unsigned long start, unsigned long perSize, unsigned long n)
