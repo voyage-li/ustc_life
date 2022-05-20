@@ -17,6 +17,7 @@ void eFPartitionWalkByAddr(unsigned long efp);
 void pMemInit(void);
 
 unsigned long pMemHandler;
-unsigned long pMemHandler_k;
+unsigned long kMemHandler;
+unsigned long uMemHandler;
 // TODO: seperate kernel heap and user heap
 #endif

@@ -3,6 +3,9 @@
 unsigned long pMemStart; //可用的内存的起始地址
 unsigned long pMemSize;  //可用的大小
 
+unsigned long kMemStart;
+unsigned long uMemStart;
+
 void memTest(unsigned long start, unsigned long grainSize)
 {
     /*本函数需要实现！！！*/
@@ -82,6 +85,10 @@ void pMemInit(void)
         pMemStart = _end_addr;
     }
 
-    pMemHandler_k = dPartitionInit(pMemStart, pMemSize / 2);
-    pMemHandler = dPartitionInit(pMemStart + pMemSize / 2, pMemSize - pMemSize / 2);
+    pMemHandler = dPartitionInit(pMemStart, pMemSize);
+
+    kMemStart = dPartitionAlloc(pMemHandler, pMemSize / 3);
+    uMemStart = dPartitionAlloc(pMemHandler, pMemSize / 3);
+    kMemHandler = dPartitionInit(kMemStart, pMemSize / 3);
+    uMemHandler = dPartitionInit(uMemStart, pMemSize / 3);
 }

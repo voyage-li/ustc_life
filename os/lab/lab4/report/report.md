@@ -388,7 +388,7 @@ void memTest(unsigned long start, unsigned long grainSize)
 
 ###### (4)区分用户和内核的内存
 
-将获取的可用的内存分块，一块用于内核，一块用于用户，句柄分别为`pMemHandler_k`和`pMemHandler`,`kmalloc()`和`kfree()`使用第一个句柄,`malloc()`和`free()`使用后者
+将获取的可用的内存分块，一块用于内核，一块用于用户，句柄分别为`kMemHandler`和`uMemHandler`,`kmalloc()`和`kfree()`使用第一个句柄,`malloc()`和`free()`使用后者，需要注意不可以直接平分可以使用的内存，因为管理区分内核和用户区需要空间
 
 ###### (5)shell 的变化
 
@@ -555,33 +555,48 @@ void addNewCmd(unsigned char *command,
 
 #### 五、运行结果
 
-- 初始化:
-
-  <img src="./src/cmd.png" style="width:50%">
-
 - testMalloc
+
+  输出结果应为指定数量的符号
 
   <img src="./src/testMalloc.png" style="width:50%">
 
 - testdP1
 
+  除 0x100 不可以正常分配，其余均可以成功分配，且每次分配的内存起始地址相同
+
   <img src="./src/testdP1.png" style="width:50%">
 
 - testdP2
+
+  分配时只有一个 EMB 块，在释放时，先是 2 个 EMB 块，释放完成后，又变回一块，正确完成合并，且运行前后 dPartition 相关参数不变
 
   <img src="./src/testdP2.png" style="width:50%">
 
 - testdP3
 
+  分配和释放时都只有一个 EMB 块，正确完成合并，且运行前后 dPartition 相关参数不变
+
   <img src="./src/testdP3.png" style="width:50%">
 
 - testeFP
 
-  <img src="./src/testeFP.png" style="width:50%">
+  开头内存空间大小为(32+4)\*4+12=156
+  成功分配 ABCD，EEB 块减少，分配 E 失败，逐步释放 ABCD，EEB 块增多，且运行前后 eFPartition 相关参数不变
+
+  <img src="./src/testeFP.png" style="width:80%">
 
 - maxMallocSize
 
+  输出可以开辟的最大空间
+
   <img src="./src/maxMalloc.png" style="width:50%">
+
+- KMEM 和 UMEM 的测试
+
+  上述测试样例均使用 UMEM 进行操作，本样例使用 KMEM 进行操作，使用上述 testdP3，但是用 kmalloc 来开辟空间，之后再检测内核区可用内存大小，输出结果除地址外应当和上基本一致
+
+  <img src="./src/kmem.png" style="width:70%">
 
 #### 六、实验收获
 

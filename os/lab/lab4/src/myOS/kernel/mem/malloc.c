@@ -5,7 +5,7 @@ unsigned long malloc(unsigned long size)
     //本函数需要实现！！！
 
     //调用实现的dPartition或者是ePartition的alloc
-    return dPartitionAlloc(pMemHandler, size);
+    return dPartitionAlloc(uMemHandler, size);
 }
 
 unsigned long free(unsigned long start)
@@ -13,14 +13,14 @@ unsigned long free(unsigned long start)
     //本函数需要实现！！！
 
     //调用实现的dPartition或者是ePartition的free
-    return dPartitionFree(pMemHandler, start);
+    return dPartitionFree(uMemHandler, start);
 }
 unsigned long kmalloc(unsigned long size)
 {
-    return dPartitionAlloc(pMemHandler_k, size);
+    return dPartitionAlloc(kMemHandler, size);
 }
 
 unsigned long kfree(unsigned long start)
 {
-    return dPartitionFree(pMemHandler_k, start);
+    return dPartitionFree(kMemHandler, start);
 }
