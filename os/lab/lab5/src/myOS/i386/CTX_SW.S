@@ -1,7 +1,6 @@
 .text
 .code32 
 
-# context switch
 .global CTX_SW
 CTX_SW:  
 	pushf 

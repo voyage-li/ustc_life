@@ -10,6 +10,7 @@
 #include "include/wallClock.h"
 
 // only for userApp
+#include "include/kmalloc.h"
 #include "include/malloc.h"
 
 void clear_the_screen();

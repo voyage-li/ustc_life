@@ -3,10 +3,9 @@
 #include "include/irq.h"
 #include "include/mem.h"
 #include "include/myPrintk.h"
+#include "include/task.h"
 #include "include/uart.h"
 #include "include/vga.h"
-
-extern void myMain(void); // TODO: to be generalized
 
 void pressAnyKeyToStart(void)
 {
@@ -26,18 +25,17 @@ void osStart(void)
     clear_screen();
 
     pMemInit(); // after this, we can use kmalloc/kfree and malloc/free
-    {
-        dPartitionWalkByAddr(pMemHandler);
-        unsigned long tmp = dPartitionAlloc(pMemHandler, 100);
-        dPartitionWalkByAddr(pMemHandler);
-        dPartitionFree(pMemHandler, tmp);
-        dPartitionWalkByAddr(pMemHandler);
-    }
+    // {
+    //     dPartitionWalkByAddr(pMemHandler);
+    //     unsigned long tmp = dPartitionAlloc(pMemHandler, 100);
+    //     dPartitionWalkByAddr(pMemHandler);
+    //     dPartitionFree(pMemHandler, tmp);
+    //     dPartitionWalkByAddr(pMemHandler);
+    // }
 
-    // finished kernel init
-    // NOW, run userApp
     myPrintk(0x2, "START RUNNING......\n");
-    myMain();
+    TaskManagerInit();
+
     myPrintk(0x2, "STOP RUNNING......ShutDown\n");
     while (1)
         ;
