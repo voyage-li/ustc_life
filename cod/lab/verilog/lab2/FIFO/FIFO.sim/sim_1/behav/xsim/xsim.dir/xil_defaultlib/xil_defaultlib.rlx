@@ -1,0 +1,11 @@
+0.7
+2020.2
+Nov 18 2020
+09:47:47
+D:/za/cod/lab2/FIFO/FIFO.sim/sim_1/behav/xsim/glbl.v,1605673889,verilog,,,,glbl,,,,,,,,
+D:/za/cod/lab2/FIFO/FIFO.srcs/sim_1/new/testbench.v,1648449301,verilog,,,,testbench,,,,,,,,
+D:/za/cod/lab2/FIFO/FIFO.srcs/sources_1/new/LCU.v,1648435545,verilog,,D:/za/cod/lab2/FIFO/FIFO.srcs/sources_1/new/SDU.v,,LCU,,,,,,,,
+D:/za/cod/lab2/FIFO/FIFO.srcs/sources_1/new/SDU.v,1648300140,verilog,,D:/za/cod/lab2/FIFO/FIFO.srcs/sources_1/new/SEDG.v,,SDU,,,,,,,,
+D:/za/cod/lab2/FIFO/FIFO.srcs/sources_1/new/SEDG.v,1648294699,verilog,,D:/za/cod/lab2/FIFO/FIFO.srcs/sources_1/new/fifo.v,,SEDG,,,,,,,,
+D:/za/cod/lab2/FIFO/FIFO.srcs/sources_1/new/fifo.v,1648447261,verilog,,D:/za/cod/lab2/FIFO/FIFO.srcs/sources_1/new/register_file.v,,fifo,,,,,,,,
+D:/za/cod/lab2/FIFO/FIFO.srcs/sources_1/new/register_file.v,1648290019,verilog,,D:/za/cod/lab2/FIFO/FIFO.srcs/sim_1/new/testbench.v,,register_file,,,,,,,,
