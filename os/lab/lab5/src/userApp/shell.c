@@ -184,11 +184,20 @@ int split2Words(unsigned char *cmdline, unsigned char **argv, int limit)
     return argc;
 }
 
+int exit_num = 0;
+
+int exit_shell(int argc, unsigned char **argv)
+{
+    myPrintf(0x6, "Exit the Shell\n");
+    exit_num = 1;
+}
+
 void initShell(void)
 {
     addNewCmd("cmd\0", listCmds, NULL, "list all registered commands\0");
     addNewCmd("help\0", help, help_help, "help [cmd]\0");
     addNewCmd("clear\0", clear, NULL, "clear the vga screen\0");
+    addNewCmd("exit\0", exit_shell, NULL, "exit shell\0");
     // TODO: may be we can add a new command exit or quit
 }
 
@@ -202,7 +211,7 @@ void startShell(void)
 
     int BUF_len = 0; //输入缓存区的长度
 
-    while (1)
+    while (!exit_num)
     {
         myPrintk_only_vga(0xa, "voyage@qemu");
         myPrintk_only_vga(0xf, "$ ");

@@ -75,12 +75,13 @@ void startMultitask(void)
     BspContextBase = (unsigned long *)kmalloc(10 * STACK_SIZE);
     BspContext = BspContextBase + STACK_SIZE - 1;
     currentTsk = NULL;
-    schedule();
+    while (1)
+        schedule();
 }
 
 void idle(void)
 {
-    myPrintk(0x6, "waiting for scheduling...\n");
+    myPrintk(0xa, "*       waiting...        *\n");
     while (1)
         schedule();
 }

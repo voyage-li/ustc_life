@@ -57,17 +57,17 @@ void FCFS()
 {
     // FCFS调度，空闲时执行idle，否则释放正在运行的，进入下一个
     // myPrintk(0x6, "begin to FCFS\n");
-    while (1)
-    {
-        myTCB *nextsk = next_tsk();
-        if (nextsk == idleTsk && currentTsk == idleTsk)
-            return;
-        if (currentTsk)
-            destoryTsk(currentTsk->tid);
+    // while (1)
+    // {
+    myTCB *nextsk = next_tsk();
+    if (nextsk == idleTsk && currentTsk == idleTsk)
+        return;
+    if (currentTsk)
+        destoryTsk(currentTsk->tid);
 
-        // myPrintk(0x6, "do a task\n");
-        nextsk->status = RUNNING;
-        currentTsk = nextsk;
-        context_switch(&BspContext, currentTsk->stack_top);
-    }
+    nextsk->status = RUNNING;
+    currentTsk = nextsk;
+    context_switch(&BspContext, currentTsk->stack_top);
+    // myPrintk(0x6, "end FCFS\n");
+    // }
 }

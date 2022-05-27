@@ -22,13 +22,37 @@ void doSomeTestBefore(void)
 
 void shell()
 {
+    myPrintf(0xb, "***************************\n");
+    myPrintf(0xb, "*   this is shell task    *\n");
+    myPrintf(0xb, "***************************\n");
+    doSomeTestBefore();
     initShell();
     memTestCaseInit();
     startShell();
 }
 
+void test1()
+{
+    myPrintf(0x1, "***************************\n");
+    myPrintf(0x1, "*  this is test1 task     *\n");
+    myPrintf(0x1, "***************************\n");
+}
+void test2()
+{
+    myPrintf(0x5, "***************************\n");
+    myPrintf(0x5, "*  this is test2 task     *\n");
+    myPrintf(0x5, "***************************\n");
+}
+
 void myMain(void)
 {
+    myPrintf(0x6, "***************************\n");
+    myPrintf(0x6, "*  this is mymain task    *\n");
+    myPrintf(0x6, "***************************\n");
+    int test1_tid = createTsk(test1);
+    int test2_tid = createTsk(test2);
     int shell_tid = createTsk(shell);
+    tskStart(TCB[test1_tid]);
+    tskStart(TCB[test2_tid]);
     tskStart(TCB[shell_tid]);
 }
