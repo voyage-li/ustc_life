@@ -5,7 +5,7 @@
 #include "../myOS/include/tick.h"
 #include "FCFSTestCase.h"
 #include "PRIOTestCase.h"
-// #include "RRTestCase.h"
+#include "RRTestCase.h"
 #include "memTestCase.h"
 #include "shell.h"
 

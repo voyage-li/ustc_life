@@ -30,7 +30,7 @@ void myTskRR5(void)
     task_execute(4);
 }
 
-void initRRCases(void)
+void RR_TEST(void)
 {
 
     int newTskTid0 = createTsk(myTskRR0); // tid 1
