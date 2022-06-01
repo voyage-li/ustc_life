@@ -1,27 +1,26 @@
 #ifndef __TASKQUEUEFIFO_H__
 #define __TASKQUEUEFIFO_H__
 
-#include "../include/task.h"
+#include "task.h"
 
-typedef struct taskQueueNode
+int fifo_length;
+
+typedef struct queueNodeFIFO
 {
-    myTCB *task;
-    struct taskQueueNode *next;
-} taskQueueNode;
+    myTCB *TCB;
+    struct queueNodeFIFO *next;
+} queueNodeFIFO;
 
-typedef struct FIFO
+typedef struct taskQueueFIFO
 {
-    taskQueueNode *head;
-    taskQueueNode *tail;
-} FIFO;
+    queueNodeFIFO *head;
+    queueNodeFIFO *tail;
+} taskQueueFIFO;
 
-FIFO taskfifo;
-
-void fifo_init();
-int fifo_empty();
-myTCB *next_tsk();
-void tskenqueue(myTCB *tsk);
-void tskdequeue();
-void FCFS();
+void taskQueueFIFOInit(taskQueueFIFO *queue);
+int taskQueueFIFOEmpty(taskQueueFIFO *queue);
+myTCB *taskQueueFIFONext(taskQueueFIFO *queue);
+void taskQueueFIFOEnqueue(taskQueueFIFO *queue, myTCB *tsk);
+myTCB *taskQueueFIFODequeue(taskQueueFIFO *queue);
 
 #endif

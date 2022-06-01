@@ -1,23 +1,30 @@
-extern void oneTickUpdateWallClock(void);       //TODO: to be generalized
+extern void oneTickUpdateWallClock(void); // TODO: to be generalized
 
 //#ifndef __TICK_HOOK__
 //#define __TICK_HOOK__
-void (*tick_hook)(void) = 0; //{};
+// void (*tick_hook)(void) = 0; //{};
 //#endif
+void (*hook_list[30])(void);
+
+int hook_func_num = 0;
+void append2HookList(void (*func)(void))
+{
+    hook_list[hook_func_num++] = func;
+}
 
 int tick_number = 0;
-void tick(void){
-	int temp_col, temp_row;	
-	tick_number++;	
-	//myPrintk(0x4,"tick::%d\n",tick_number);
+void tick(void)
+{
+    int temp_col, temp_row;
+    tick_number++;
 
-	oneTickUpdateWallClock();
+    oneTickUpdateWallClock();
 
-	/* call hooks 
-	scheduler_tick();  // RR
-	tick_hook_arr();  // arriving	
+    for (int i = 0; i < hook_func_num; i++)
+        hook_list[i]();
+}
 
-	if(watchdogTimer_func) watchdogTimer_func(); 
-    */
-	if(tick_hook) tick_hook();  //user defined   
+unsigned int get_tick_times()
+{
+    return tick_number;
 }
