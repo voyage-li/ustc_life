@@ -51,9 +51,22 @@ void test2()
     myPrintf(0x5, "*********************************\n");
 }
 
+void print_alg()
+{
+    if (sch.type == FCFS)
+        put_chars("SysSchedulerNow: FCFS", 0xb, 24, 45);
+    else if (sch.type == RR)
+        put_chars("SysSchedulerNow: RR", 0xb, 24, 45);
+    else if (sch.type == PRIO)
+        put_chars("SysSchedulerNow: PRIO", 0xb, 24, 45);
+    else if (sch.type == SJF)
+        put_chars("SysSchedulerNow: SJF", 0xb, 24, 45);
+}
+
 void myMain(void)
 {
     init_time();
+    append2HookList(print_alg);
     extern int shell_start_flag;
     myPrintf(0x6, "*********************************\n");
     myPrintf(0x6, "*        schedule task0         *\n");
@@ -82,9 +95,9 @@ void myMain(void)
         {
             PRIO_TEST();
         }
-        // else if (sch.type == RR)
-        // {
-        //     RR_TEST();
-        // }
+        else if (sch.type == RR)
+        {
+            RR_TEST();
+        }
     }
 }

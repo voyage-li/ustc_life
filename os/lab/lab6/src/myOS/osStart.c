@@ -45,7 +45,7 @@ void pressAnyKeyToStart(void)
         sch.type = RR;
         break;
     case '4':
-        sch.type = PRIO;
+        sch.type = FCFS;
         shell_start_flag = 1;
         break;
     }

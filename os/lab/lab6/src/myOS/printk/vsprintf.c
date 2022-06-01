@@ -40,9 +40,9 @@
 #define NOFLOAT
 #endif
 
-#ifndef NOFLOAT
-#include <os.h>
-#endif
+// #ifndef NOFLOAT
+// #include <os.h>
+// #endif
 
 #define ZEROPAD 1  // Pad with zero
 #define SIGN 2     // Unsigned/signed long

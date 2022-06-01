@@ -137,15 +137,15 @@ void TaskManagerInit(void)
         preTCB = TCB[i];
     }
 
+    append2HookList(add_runntime);
+    append2HookList(print_info);
+
     init_sch();
     sch.schedulerInit_func();
 
     firstFree = TCB[0];
     int initTid = createTsk(initTskBody);
     tskStart(TCB[initTid]);
-
-    append2HookList(add_runntime);
-    append2HookList(print_info);
 
     startMultitask();
 }

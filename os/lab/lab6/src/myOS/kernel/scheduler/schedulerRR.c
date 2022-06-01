@@ -1,4 +1,5 @@
 #include "../../include/schedulerRR.h"
+#include "../../include/myPrintk.h"
 
 myTCB *nextTskRR(void)
 {
@@ -15,23 +16,27 @@ myTCB *dequeueTskRR(void)
     return RR_pop();
 }
 
-void RR_hook(void)
-{
-    if (currentTsk == idleTsk)
-        return;
-    currentTsk->this_time++;
-    if (currentTsk->this_time >= 2)
-    {
-        currentTsk->this_time = 0;
-        enqueueTskRR(currentTsk);
-        context_switch(&currentTsk->stack_top, BspContext); //直接调用上下文切换返回
-    }
-}
-
 void schedulerInitRR(void)
 {
     RR_init();
     append2HookList(RR_hook);
+}
+
+void RR_hook(void)
+{
+    if (currentTsk == idleTsk)
+        return;
+    if (get_tick_times() % 100 != 0)
+        return;
+    currentTsk->this_time++;
+    // myPrintk(0x6, "current this run: %d\n", currentTsk->this_time);
+    if (currentTsk->this_time >= 2)
+    {
+        currentTsk->this_time = 0;
+        if (currentTsk->run_time < getTskPara(EXETIME, currentTsk->para))
+            sch.enqueueTsk_func(currentTsk);
+        context_switch(&currentTsk->stack_top, BspContext); //直接调用上下文切换返回
+    }
 }
 
 void scheduleRR()
