@@ -1,7 +1,7 @@
 #include "../../include/scheduler.h"
 #include "../../include/schedulerFCFS.h"
 #include "../../include/schedulerPRIO.h"
-// #include "../../include/schedulerRR.h"
+#include "../../include/schedulerRR.h"
 
 void init_sch(void)
 {
@@ -23,13 +23,13 @@ void init_sch(void)
         sch.schedule = schedulePRIO;
         sch.tick_hook = NULL;
         break;
-        // case RR:
-        //     sch.schedulerInit_func = schedulerInitRR;
-        //     sch.nextTsk_func = nextTskRR;
-        //     sch.enqueueTsk_func = enqueueTskRR;
-        //     sch.dequeueTsk_func = dequeueTskRR;
-        //     sch.schedule = scheduleRR;
-        //     sch.tick_hook = NULL;
-        //     break;
+    case RR:
+        sch.schedulerInit_func = schedulerInitRR;
+        sch.nextTsk_func = nextTskRR;
+        sch.enqueueTsk_func = enqueueTskRR;
+        sch.dequeueTsk_func = dequeueTskRR;
+        sch.schedule = scheduleRR;
+        sch.tick_hook = NULL;
+        break;
     }
 }

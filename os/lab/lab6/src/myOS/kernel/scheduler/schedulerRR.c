@@ -1,6 +1,4 @@
 #include "../../include/schedulerRR.h"
-#include "../../include/myPrintk.h"
-#include "../../include/tick.h"
 
 myTCB *nextTskRR(void)
 {
@@ -17,7 +15,7 @@ myTCB *dequeueTskRR(void)
     return RR_pop();
 }
 
-void RR_hook()
+void RR_hook(void)
 {
     if (currentTsk == idleTsk)
         return;
