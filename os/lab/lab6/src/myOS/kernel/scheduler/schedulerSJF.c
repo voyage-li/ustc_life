@@ -21,6 +21,12 @@ void schedulerInitSJF(void)
     heap_init_SJF();
 }
 
+void print_sjf()
+{
+    for (int i = 1; i < length_SJF; i++)
+        myPrintk(0x6, "sjf_dataid: %d tid:%d exe: %d arr: %d\n", i, SJF_data[i]->tid, SJF_data[i]->para->exeTime, SJF_data[i]->para->arrTime);
+}
+
 void scheduleSJF()
 {
     while (1)
@@ -49,5 +55,6 @@ void scheduleSJF()
         nextTsk->status = RUNNING;
         currentTsk = nextTsk;
         context_switch(&BspContext, currentTsk->stack_top);
+        // print_sjf();
     }
 }

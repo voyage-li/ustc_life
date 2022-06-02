@@ -4,7 +4,7 @@
 #include "schedulerSJF.h"
 #include "task.h"
 
-int length;
+int length_SJF;
 myTCB *SJF_data[20];
 void heap_init_SJF();
 void swim_SJF(int k);             //上浮
