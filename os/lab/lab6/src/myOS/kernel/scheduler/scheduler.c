@@ -2,6 +2,7 @@
 #include "../../include/schedulerFCFS.h"
 #include "../../include/schedulerPRIO.h"
 #include "../../include/schedulerRR.h"
+#include "../../include/schedulerSJF.h"
 
 void init_sch(void)
 {
@@ -29,6 +30,14 @@ void init_sch(void)
         sch.enqueueTsk_func = enqueueTskRR;
         sch.dequeueTsk_func = dequeueTskRR;
         sch.schedule = scheduleRR;
+        sch.tick_hook = NULL;
+        break;
+    case SJF:
+        sch.schedulerInit_func = schedulerInitSJF;
+        sch.nextTsk_func = nextTskSJF;
+        sch.enqueueTsk_func = enqueueTskSJF;
+        sch.dequeueTsk_func = dequeueTskSJF;
+        sch.schedule = scheduleSJF;
         sch.tick_hook = NULL;
         break;
     }

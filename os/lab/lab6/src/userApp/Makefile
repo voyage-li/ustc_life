@@ -4,4 +4,5 @@ USER_APP_OBJS =	output/userApp/main.o \
 				output/userApp/PRIOTestCase.o \
 				output/userApp/FCFSTestCase.o \
 				output/userApp/RRTestCase.o \
+				output/userApp/SJFTestCase.o \
 

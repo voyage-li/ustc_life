@@ -6,6 +6,7 @@
 #include "FCFSTestCase.h"
 #include "PRIOTestCase.h"
 #include "RRTestCase.h"
+#include "SJFTestCase.h"
 #include "memTestCase.h"
 #include "shell.h"
 
@@ -60,7 +61,8 @@ void print_alg()
     else if (sch.type == PRIO)
         put_chars("SysSchedulerNow: PRIO", 0xb, 24, 45);
     else if (sch.type == SJF)
-        put_chars("SysSchedulerNow: SJF", 0xb, 24, 45);
+        put_chars("SysSchedulSJFow: SJF", 0xb, 24, 45);
+    put_chars("SysSchedulerNow: SJF", 0xb, 24, 45);
 }
 
 void myMain(void)
@@ -98,6 +100,10 @@ void myMain(void)
         else if (sch.type == RR)
         {
             RR_TEST();
+        }
+        else if (sch.type == SJF)
+        {
+            SJF_TEST();
         }
     }
 }
