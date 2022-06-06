@@ -62,7 +62,6 @@ void print_alg()
         put_chars("SysSchedulerNow: PRIO", 0xb, 24, 45);
     else if (sch.type == SJF)
         put_chars("SysSchedulSJFow: SJF", 0xb, 24, 45);
-    put_chars("SysSchedulerNow: SJF", 0xb, 24, 45);
 }
 
 void myMain(void)

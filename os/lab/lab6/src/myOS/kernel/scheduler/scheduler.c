@@ -14,7 +14,6 @@ void init_sch(void)
         sch.enqueueTsk_func = enqueueTskFCFS;
         sch.dequeueTsk_func = dequeueTskFCFS;
         sch.schedule = scheduleFCFS;
-        sch.tick_hook = NULL;
         break;
     case PRIO:
         sch.schedulerInit_func = schedulerInitPRIO;
@@ -22,7 +21,6 @@ void init_sch(void)
         sch.enqueueTsk_func = enqueueTskPRIO;
         sch.dequeueTsk_func = dequeueTskPRIO;
         sch.schedule = schedulePRIO;
-        sch.tick_hook = NULL;
         break;
     case RR:
         sch.schedulerInit_func = schedulerInitRR;
@@ -30,7 +28,6 @@ void init_sch(void)
         sch.enqueueTsk_func = enqueueTskRR;
         sch.dequeueTsk_func = dequeueTskRR;
         sch.schedule = scheduleRR;
-        sch.tick_hook = NULL;
         break;
     case SJF:
         sch.schedulerInit_func = schedulerInitSJF;
@@ -38,7 +35,6 @@ void init_sch(void)
         sch.enqueueTsk_func = enqueueTskSJF;
         sch.dequeueTsk_func = dequeueTskSJF;
         sch.schedule = scheduleSJF;
-        sch.tick_hook = NULL;
         break;
     }
 }

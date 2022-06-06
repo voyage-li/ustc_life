@@ -44,12 +44,10 @@ void scheduleSJF()
             nextTsk = dequeueTskSJF();
         if (nextTsk == idleTsk && currentTsk == idleTsk)
             continue;
-        if (currentTsk)
+        if (currentTsk && currentTsk == idleTsk)
         {
-            if (currentTsk == idleTsk)
-                destroyTsk(currentTsk->tid);
-            if (currentTsk == idleTsk)
-                idleTsk = NULL;
+            destroyTsk(currentTsk->tid);
+            idleTsk = NULL;
         }
 
         nextTsk->status = RUNNING;

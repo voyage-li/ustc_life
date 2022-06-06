@@ -30,7 +30,6 @@ void print_fcfs()
 
 void scheduleFCFS()
 {
-    // FCFS调度，空闲时执行idle，否则释放正在运行的，进入下一个
     while (1)
     {
         myTCB *nextTsk;
@@ -46,12 +45,11 @@ void scheduleFCFS()
             nextTsk = dequeueTskFCFS();
         if (nextTsk == idleTsk && currentTsk == idleTsk)
             continue;
-        if (currentTsk)
+
+        if (currentTsk && currentTsk == idleTsk)
         {
-            if (currentTsk == idleTsk)
-                destroyTsk(currentTsk->tid);
-            if (currentTsk == idleTsk)
-                idleTsk = NULL;
+            destroyTsk(currentTsk->tid);
+            idleTsk = NULL;
         }
 
         nextTsk->status = RUNNING;

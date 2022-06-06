@@ -57,10 +57,13 @@ void destroyTsk(int tskIndex)
     kfree((unsigned long)TCB[tskIndex]->stack_max);
     kfree((unsigned long)TCB[tskIndex]->para);
     TCB[tskIndex]->status = BLANK;
-    TCB[tskIndex]->stack_max = NULL;
-    TCB[tskIndex]->stack_top = NULL;
+    TCB[tskIndex]->stack_max = 0;
+    TCB[tskIndex]->stack_top = 0;
+    TCB[tskIndex]->run_time = 0;
+    TCB[tskIndex]->this_time = 0;
     TCB[tskIndex]->function = NULL;
     TCB[tskIndex]->next = firstFree;
+    TCB[tskIndex]->para = NULL;
     firstFree = TCB[tskIndex];
 }
 void tskStart(myTCB *tsk)
@@ -92,7 +95,6 @@ void idleTskBody(void)
     myPrintk(0xa, "*********************************\n");
     // while (1)
     //     sch.schedule();
-    // 否则不tick
 }
 
 void add_runntime()

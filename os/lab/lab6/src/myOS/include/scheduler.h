@@ -17,7 +17,6 @@ typedef struct scheduler
     myTCB *(*dequeueTsk_func)(void);
     void (*schedulerInit_func)(void);
     void (*schedule)(void);
-    void (*tick_hook)(void);
 } scheduler;
 
 scheduler sch;
