@@ -2,7 +2,12 @@
 #include "../../include/kmalloc.h"
 #include "../../include/myPrintk.h"
 #include "../../include/scheduler.h"
+#include "../../include/taskarrv.h"
 #include "../../include/tick.h"
+
+int prosess[100];
+int last_prosess;
+int now_pid;
 
 void task_execute(unsigned int wait_time)
 {
@@ -89,10 +94,22 @@ void startMultitask(void)
 
 void idleTskBody(void)
 {
+
     myPrintk(0xa, "*********************************\n");
     myPrintk(0xa, "*          Idle task            *\n");
     myPrintk(0xa, "*     waiting for scheduler     *\n");
     myPrintk(0xa, "*********************************\n");
+    myPrintk(0x7, "*********************************\n");
+    myPrintk(0x7, "current order:\n");
+    for (int i = 0; i < 100; i++)
+    {
+        if (prosess[i] == -1)
+            break;
+        else
+            myPrintk(0x7, "%d", prosess[i]);
+    }
+    myPrintk(0x7, "\n");
+
     // while (1)
     //     sch.schedule();
 }
@@ -112,6 +129,11 @@ void print_info()
     if (currentTsk == idleTsk)
         return;
 
+    if (currentTsk->tid != last_prosess)
+    {
+        prosess[now_pid++] = currentTsk->tid;
+        last_prosess = currentTsk->tid;
+    }
     myPrintk(0x7, "*********************************\n");
     myPrintk(0x7, "*  Current task tid : %-2d        *\n", currentTsk->tid);
     myPrintk(0x7, "*  Priority         : %-2d        *\n", getTskPara(PRIORITY, currentTsk->para));
@@ -139,8 +161,15 @@ void TaskManagerInit(void)
         preTCB = TCB[i];
     }
 
+    last_prosess = 0;
+    for (int i = 0; i < 100; i++)
+        prosess[i] = -1;
+    now_pid = 0;
+
     append2HookList(add_runntime);
     append2HookList(print_info);
+
+    heap_init_arrv();
 
     init_sch();
     sch.schedulerInit_func();

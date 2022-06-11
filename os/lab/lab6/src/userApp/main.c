@@ -87,7 +87,6 @@ void myMain(void)
     }
     else
     {
-        heap_init_arrv();
         if (sch.type == FCFS)
         {
             FCFS_TEST();

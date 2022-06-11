@@ -474,13 +474,12 @@ def random_prop(prop=formula([sympy.Symbol('p')]),
     return prop
 
 
-
 if __name__ == '__main__':
     L = system_L()
     props = [
-        ('(x1>x2)>((~x1>~x2)>(x2>x1))',[]),
-        ('~(~p)>p',[]),
-        ('~(p>q)>~q',[])
+        ('(x1>x2)>((~x1>~x2)>(x2>x1))', []),
+        ('p>q', ['~(p>q)', '~p']),
+        ('~(p>q)>~q', [])
     ]
     for prop, garma in props:
         try:
