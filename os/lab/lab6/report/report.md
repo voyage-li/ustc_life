@@ -495,7 +495,7 @@ typedef struct myTCB
       │   │   │   ├── output/myOS/kernel/scheduler/schedulerPRIO.o
       │   │   │   ├── output/myOS/kernel/scheduler/schedulerSJF.o
       │   │   │   └── output/myOS/kernel/scheduler/schedulerRR.o
-  	  │   │	  └── TASK_OBJS
+      │   │   └── TASK_OBJS
       │   │       ├── output/myOS/kernel/scheduler/task.o
       │   │       ├── output/myOS/kernel/scheduler/taskarrv.o
       │   │       ├── output/myOS/kernel/scheduler/taskQueueFIFO.o
