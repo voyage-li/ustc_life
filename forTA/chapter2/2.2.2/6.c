@@ -1,6 +1,7 @@
 #include <stdio.h>
 
-int main() {
+int main()
+{
     int a, b, c;
     scanf("%d", &a);
     b = (a = a >= 0 ? a : -a, a++);

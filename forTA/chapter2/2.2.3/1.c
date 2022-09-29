@@ -1,6 +1,7 @@
 #include <stdio.h>
 
-int main() {
+int main()
+{
     int a, b;
     double x, y;
     printf("%f\n", 3.5 + 1 / 2 + 56 % 10); // 9.500000

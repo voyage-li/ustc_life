@@ -1,6 +1,7 @@
 #include <stdio.h>
 
-int main() {
+int main()
+{
     float a = 1.75, b = 1.35;
     float c = a + b;
     printf("%f,%.7f\n", c, c);

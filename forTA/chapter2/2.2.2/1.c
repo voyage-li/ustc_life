@@ -1,6 +1,7 @@
 #include <stdio.h>
 
-int main() {
+int main()
+{
     int i = -1;
     float f = 3;
     printf("%d,%d\n", -(-i), -i);

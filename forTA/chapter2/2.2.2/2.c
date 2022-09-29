@@ -1,6 +1,7 @@
 #include <stdio.h>
 
-int main() {
+int main()
+{
     int a = 3, b = 3, c = 3;
     printf("a>b:%d,a<b:%d,a==b:%d\n", a > b, a < b, a == b);
     printf("a is odd:%d,b is odd:%d\n", a % 2, b % 2);

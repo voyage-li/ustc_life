@@ -1,6 +1,7 @@
 #include <stdio.h>
 
-int main() {
+int main()
+{
     int a, b, c, x, y;
     scanf("%d%d%d", &a, &b, &c);
     printf("%d\n", b > c && b == c); // 0

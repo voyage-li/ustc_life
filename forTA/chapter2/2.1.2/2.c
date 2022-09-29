@@ -1,6 +1,7 @@
 #include <stdio.h>
 
-int main() {
+int main()
+{
     int i = 0x7fffffff;
     unsigned u = 0xffffffff;
     float f = 0xffffffff;
