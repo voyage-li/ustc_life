@@ -37,7 +37,7 @@ int main()
     std::vector<int> a;
     int temp;
     a.push_back(0);
-    std::ofstream file("./output/heapsort/time.txt", std::ios_base::app);
+    std::ofstream file("./output/heap_sort/time.txt", std::ios_base::app);
     clock_t start, end;
     while (std::cin >> temp)
         a.push_back(temp);

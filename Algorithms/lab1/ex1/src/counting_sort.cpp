@@ -25,7 +25,7 @@ int main()
         a.push_back(temp);
         max = max < temp ? temp : max;
     }
-    std::ofstream file("./output/countingsort/time.txt", std::ios_base::app);
+    std::ofstream file("./output/counting_sort/time.txt", std::ios_base::app);
     clock_t start, end;
     start = clock();
     a = countingsort(a, a.size(), max);

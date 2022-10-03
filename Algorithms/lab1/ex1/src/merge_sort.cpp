@@ -24,7 +24,7 @@ int main()
 {
     std::vector<int> a;
     int temp;
-    std::ofstream file("./output/mergesort/time.txt", std::ios_base::app);
+    std::ofstream file("./output/merge_sort/time.txt", std::ios_base::app);
     clock_t start, end;
     while (std::cin >> temp)
         a.push_back(temp);

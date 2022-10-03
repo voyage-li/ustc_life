@@ -36,10 +36,10 @@ if __name__ == '__main__':
     command_line('rm -rf ./output/**/*.txt')
     command_line('rm -rf ./output/*.png')
     command_line('rm -rf ./input/*.txt')
-    command_line('g++ ./src/quicksort.cpp -o ./src/quicksort')
-    command_line('g++ ./src/mergesort.cpp -o ./src/mergesort')
-    command_line('g++ ./src/heapsort.cpp -o ./src/heapsort')
-    command_line('g++ ./src/countingsort.cpp -o ./src/countingsort')
+    command_line('g++ ./src/quick_sort.cpp -o ./src/quick_sort')
+    command_line('g++ ./src/merge_sort.cpp -o ./src/merge_sort')
+    command_line('g++ ./src/heap_sort.cpp -o ./src/heap_sort')
+    command_line('g++ ./src/counting_sort.cpp -o ./src/counting_sort')
 
     for i in range(3, 21, 3):
         with open('./input/input_' + str(i) + '.txt', 'w') as f:
@@ -55,7 +55,7 @@ if __name__ == '__main__':
 
     draw_pic(0.002, 1)
     draw_pic(0.1, 2)
-    command_line('rm -rf ./src/quicksort')
-    command_line('rm -rf ./src/heapsort')
-    command_line('rm -rf ./src/countingsort')
-    command_line('rm -rf ./src/mergesort')
+    command_line('rm -rf ./src/quick_sort')
+    command_line('rm -rf ./src/heap_sort')
+    command_line('rm -rf ./src/counting_sort')
+    command_line('rm -rf ./src/merge_sort')
