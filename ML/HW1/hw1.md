@@ -2,8 +2,8 @@
 
 $$
 \frac{\partial \ln \det{A}}{\partial x}
-=\frac{\partial \ln \det{A}}{\partial A}\frac{\partial A}{\partial x}
-= (A^{-1})^T \cdot \frac{\partial A}{\partial x}
+=\frac{\partial \ln \det{A}}{\partial \det{A}}\frac{\partial \det{A}}{\partial x}
+= (\det{A})^{-1}\cdot \frac{\partial \det{A}}{\partial x}
 $$
 
 #### 2.习题 1.12
@@ -197,7 +197,7 @@ $$AUC=\frac{1}{2}\sum_{i=1}^{m-1}{(x_{i+1}-x_i)(y_{i+1}+y_i)}$$
 
 $$l_{rank}=\frac{1}{m^+m^-}\sum_{x^+\in D^+}{\sum_{x^-\in D^-}{[\|(f(x^+)<f(x^-))+\frac{1}{2}\|(f(x^+)=f(x^-))]}}$$
 
-如果把横坐标定位当前反例的个数$m^-$，纵坐标定为当前正例的个数$m^+$，`AUC`则是，当前样本坐标$(x,y)$，下一个样本坐标为正例则为$(x,y+1)$，反之则为$(x+1,y)$或$(x+\frac{1}{2},y+\frac{1}{2})$，此时将横纵坐标缩小$m^- m^+$，作归一化处理，可得:
+如果把横坐标定位当前反例的个数$m^-$，纵坐标定为当前正例的个数$m^+$，当前样本坐标$(x,y)$，下一个样本坐标为正例则为$(x,y+1)$，反之则为$(x+1,y)$或$(x+\frac{1}{2},y+\frac{1}{2})$，此时将横纵坐标缩小$m^- m^+$，作归一化处理，可得:
 
 $$AUC=\frac{1}{m^+m^-}\sum_{x^+\in D^+}{\sum_{x^-\in D^-}{[\|(f(x^+)>f(x^-))+\frac{1}{2}\|(f(x^+)=f(x^-))]}}$$
 

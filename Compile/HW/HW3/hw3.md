@@ -27,17 +27,17 @@ $I_8=goto(I_7,S)=closure(\{[L\rightarrow L,S\cdot]\})=\{L\rightarrow L,S\cdot\}$
 ~~~mermaid
 graph TD
 	A[I<sub>0</sub>]--S-->B[I<sub>1</sub>]
-	A--左括号-->C[I<sub>2</sub>]
+	A--"("-->C[I<sub>2</sub>]
 	A--a-->D[I<sub>3]
 	C--L-->E[I<sub>4]
 	C--S-->F[I<sub>5]
-	E--右括号-->G[I<sub>6]
-	E--逗号-->H[I<sub>7]
+	E--")"-->G[I<sub>6]
+	E--","-->H[I<sub>7]
 	H--S-->I[I<sub>8]
 	D--a-->C
-	C--左括号-->C
+	C--"("-->C
 	H--a-->D
-	H--左括号-->C
+	H--"("-->C
 ~~~
 
 ##### 3.19-a
@@ -72,3 +72,5 @@ $FIRST(AaAb)\cap FIRST(BbBa)=\{a\}\cap \{b\}=\emptyset$
 $FOLLOW(A)\cap FOLLW(B)=\{a,b\} \cap \{a,b\}\neq \emptyset$
 
 所以是$LL(1)$文法不是$SLR(1)$文法
+
+####
