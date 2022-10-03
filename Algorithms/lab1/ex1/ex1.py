@@ -2,7 +2,7 @@ import os
 import random
 from matplotlib import pyplot as plt
 
-data = ['quicksort', 'heapsort', 'mergesort', 'countingsort']
+data = ['quick_sort', 'heap_sort', 'merge_sort', 'counting_sort']
 picdata = {
     data[0]: [],
     data[1]: [],
