@@ -1,6 +1,5 @@
 import os
 import random
-import numpy as np
 from matplotlib import pyplot as plt
 
 data = ['quicksort', 'heapsort', 'mergesort', 'countingsort']
@@ -12,8 +11,13 @@ picdata = {
 }
 
 
+def command_line(string):
+    print(string)
+    os.system(string)
+
+
 def draw_pic(ylim, name):
-    A = [x for x in np.arange(3, 21, 3)]
+    A = [x for x in range(3, 21, 3)]
     plt.figure(figsize=(12, 8), dpi=72)
     plt.xlim(0, 20)
     plt.ylim(0, ylim)
@@ -29,33 +33,29 @@ def draw_pic(ylim, name):
 
 
 if __name__ == '__main__':
-    os.system('rm -rf ./output/**/*.txt')
-    os.system('rm -rf ./output/*.png')
-    os.system('rm -rf ./input/*.txt')
-    os.system('g++ ./src/quicksort.cpp -o ./src/quicksort')
-    os.system('g++ ./src/mergesort.cpp -o ./src/mergesort')
-    os.system('g++ ./src/heapsort.cpp -o ./src/heapsort')
-    os.system('g++ ./src/countingsort.cpp -o ./src/countingsort')
+    command_line('rm -rf ./output/**/*.txt')
+    command_line('rm -rf ./output/*.png')
+    command_line('rm -rf ./input/*.txt')
+    command_line('g++ ./src/quicksort.cpp -o ./src/quicksort')
+    command_line('g++ ./src/mergesort.cpp -o ./src/mergesort')
+    command_line('g++ ./src/heapsort.cpp -o ./src/heapsort')
+    command_line('g++ ./src/countingsort.cpp -o ./src/countingsort')
 
     for i in range(3, 21, 3):
-        print('2^'+str(i))
         with open('./input/input_' + str(i) + '.txt', 'w') as f:
             for _ in range(0, 2**i):
                 f.write(str(random.randint(0, 2**15-1))+'\n')
         for sort in data:
-            os.system('./src/' + sort + ' <./input/input_' + str(i) + '.txt >./output/' + sort + '/result_' + str(i) + '.txt')
+            command_line('./src/' + sort + ' <./input/input_' + str(i) + '.txt >./output/' + sort + '/result_' + str(i) + '.txt')
 
     for x in data:
         with open('./output/' + x + '/time.txt') as f:
             for line in f:
                 picdata[x].append(float(line[:-2]))
 
-    for x in picdata:
-        print(x, picdata[x])
-
     draw_pic(0.002, 1)
     draw_pic(0.1, 2)
-    os.system('rm -rf ./src/quicksort')
-    os.system('rm -rf ./src/heapsort')
-    os.system('rm -rf ./src/countingsort')
-    os.system('rm -rf ./src/mergesort')
+    command_line('rm -rf ./src/quicksort')
+    command_line('rm -rf ./src/heapsort')
+    command_line('rm -rf ./src/countingsort')
+    command_line('rm -rf ./src/mergesort')
