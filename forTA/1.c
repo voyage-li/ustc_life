@@ -7,7 +7,8 @@ int find(int loc)
     {
         if ((10 * data[0] + data[1]) * (100 * data[2] + 10 * data[3] + data[4]) == 1000 * data[5] + 100 * data[6] + 10 * data[7] + data[8])
         {
-            printf("%d%d * %d%d%d == %d%d%d%d\n", data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8]);
+            printf("%d%d * %d%d%d == %d%d%d%d\n",
+                   data[0], data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8]);
             return 1;
         }
         return 0;

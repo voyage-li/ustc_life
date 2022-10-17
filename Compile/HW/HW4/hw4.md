@@ -1,10 +1,10 @@
 #### 3.4b
 
 $$ {left}
-R \rightarrow R'|'R\ | E\\
-E \rightarrow RR|T\\
-T \rightarrow R*|F\\
-F \rightarrow (R)|a|b
+R1 \rightarrow (R4)|a|b|R3\\
+R2 \rightarrow R1*|R1\\
+R3 \rightarrow R3R2 | R2\\
+R4 \rightarrow R4'|'R1 | R1\\
 $$ {end}
 
 #### 3.10

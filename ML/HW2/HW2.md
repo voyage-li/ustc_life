@@ -146,12 +146,12 @@ $$
 
 ![image-20221012211039850](C:/Users/voyage/AppData/Roaming/Typora/typora-user-images/image-20221012211039850.png)(a)
 $$
-H(D) = -\frac{5}{10}log\frac{5}{10}-\frac{5}{10}log\frac{5}{10}=1
+Ent(D) = -\frac{5}{10}log\frac{5}{10}-\frac{5}{10}log\frac{5}{10}=1
 $$
 (b) 
 $$
 \begin{align*}
-g(D,A)&=H(D)-[\frac{4}{10}H(D_1)+\frac{6}{10}H(D_2)]\\
+Gain(D,A)&=Ent(D)-[\frac{4}{10}Ent(D_1)+\frac{6}{10}Ent(D_2)]\\
 &=1-[\frac{4}{10}(-\frac{3}{4}log\frac{3}{4}-\frac{1}{4}log\frac{1}{4})+\frac{6}{10}(-\frac{2}{6}log\frac{2}{6}-\frac{4}{6}log\frac{4}{6})]\\
 &=0.1245
 \end{align*}
@@ -159,13 +159,38 @@ $$
 
 $$
 \begin{align*}
-g(D,B)&=H(D)-[\frac{5}{10}H(D_1)+\frac{5}{10}H(D_2)]\\
+Gain(D,B)&=Ent(D)-[\frac{5}{10}Ent(D_1)+\frac{5}{10}Ent(D_2)]\\
 &=1-[\frac{5}{10}(-\frac{2}{5}log\frac{2}{5}-\frac{3}{5}log\frac{3}{5})+\frac{5}{10}(-\frac{3}{5}log\frac{3}{5}-\frac{2}{5}log\frac{2}{5})]\\
 &=0.0290
 \end{align*}
 $$
 
-(c) 均为1
+(c) 
+$$
+t=1.5 \ \ \ Gain(D,C,t)=1+\frac{9}{10}\frac{4}{9}log\frac{4}{9}+\frac{5}{10}\frac{5}{9}log\frac{5}{9}=0.1080
+$$
+
+$$
+t = 2.5\ \ \ Gain(D,C,t)=1+\frac{8}{10}\frac{3}{8}log\frac{3}{8}+\frac{8}{10}\frac{5}{8}log\frac{5}{8}=0.2365
+$$
+
+$$
+t = 3.5\ \ \ Gain(D,C,t)=1+\frac{3}{10}\frac{2}{3}log\frac{2}{3}+\frac{3}{10}\frac{1}{3}log\frac{1}{3}+\frac{7}{10}\frac{3}{7}log\frac{3}{7}+\frac{7}{10}\frac{4}{7}log\frac{4}{7}=0.0349
+$$
+
+$$
+t=4.5\ \ \  Gain(D,C,t)=1+\frac{4}{10}\frac{3}{4}log\frac{3}{4}+\frac{4}{10}\frac{1}{4}log\frac{1}{4}+\frac{6}{10}\frac{2}{6}log\frac{2}{6}+\frac{6}{10}\frac{4}{6}log\frac{4}{6}=0.1245
+$$
+
+$$
+t=5.5\ \ \ Gain(D,C,t)=0
+$$
+
+$$
+t=7.5\ \ \  Gain(D,C,t)=1+\frac{9}{10}\frac{5}{9}log\frac{5}{9}+\frac{9}{10}\frac{4}{9}log\frac{4}{9}=0.1080
+$$
+
+
 
 (d) 
 $$
@@ -179,4 +204,18 @@ $$
 $A$是最优化分
 
 (e)
+
+~~~mermaid
+graph TD
+	c[C=?]--<2.5-->add((+))
+	c[C=?]--">2.5"-->A[A=?]
+	A[A=?]--T-->B[B=?]
+	A[A=?]--F-->e[B=?]
+	B[B=?]--T-->ADD((+))
+	B[B=?]--F-->minus(("-"))
+	e[B=?]--T-->ADDD(("-"))
+	e[B=?]--F-->minuss(("+"))
+~~~
+
+
 
