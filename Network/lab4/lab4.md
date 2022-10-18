@@ -127,12 +127,10 @@
 
 12. **What is the throughput (bytes transferred per unit time) for the TCP connection?  Explain how you calculated this value.**
 
-     > ![image-20221017231643152](C:/Users/voyage/AppData/Roaming/Typora/typora-user-images/image-20221017231643152.png)
+     > ![image-20221018210119279](C:/Users/voyage/AppData/Roaming/Typora/typora-user-images/image-20221018210119279.png)
      >
-     > ![image-20221017231658919](C:/Users/voyage/AppData/Roaming/Typora/typora-user-images/image-20221017231658919.png)
-     >
-     > $\frac{164091 \times 8}{5.651141-0.026477}=233387.8077bps$
-
+     > $\frac{164041 \times 8}{5.297341-0.000084}=247737.2723bps$
+    
 13. **Use the Time-Sequence-Graph(Stevens) plotting tool to view the sequence  number versus time plot of segments being sent from the client to the  gaia.cs.umass.edu server. Can you identify where TCP’s slowstart phase begins  and ends, and where congestion avoidance takes over? Comment on ways in  which the measured data differs from the idealized behavior of TCP that we’ve  studied in the text.**
 
      > ![image-20221018000919975](C:/Users/voyage/AppData/Roaming/Typora/typora-user-images/image-20221018000919975.png)
@@ -143,4 +141,6 @@
 
 14. **Answer each of two questions above for the trace that you have gathered when  you transferred a file from your computer to gaia.cs.umass.edu**
 
-     > 
+     > ![image-20221018211045863](C:/Users/voyage/AppData/Roaming/Typora/typora-user-images/image-20221018211045863.png)
+     >
+     > 自己发的文件完全看不出来慢启动
