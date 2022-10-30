@@ -59,48 +59,58 @@ $$
 ![image-20221022143830258](C:/Users/voyage/AppData/Roaming/Typora/typora-user-images/image-20221022143830258.png)
 $$
 \begin{align*}
-b_1&=0.2\times0.6+0.3\times0.2=0.18\\
-b_2&=0.2\times0.1+0.3\times0.7=0.23\\
-\hat{y}&=0.5\times b_1+0.8\times b_2=0.274\\
-&\frac{1}{2}(y-\hat{y})^2=0.025538
+b_0&=\begin{bmatrix}
+0.18\\
+10.23
+\end{bmatrix}\\
+\hat{y}&=0.274\\
+\frac{1}{2}(y-\hat{y})^2&=0.025538
 \end{align*}
 $$
+
+$$
+V_0=\begin{bmatrix}
+0.6 & 0.1\\
+0.2 & 0.7
+\end{bmatrix}   & &&&&
+w_0=\begin{bmatrix}
+0.5\\
+0.8
+\end{bmatrix}
+$$
+
+
 
 参数更新:
-
 $$
 \begin{align*}
-g &= \hat{y}(1-\hat{y})(y-\hat{y})=0.04496\\
-e_1&=b_1(1-b_1)w_1g=0.003318\\
-e_2&=b_2(1-b_2)w_2g=0.006370\\
-\Delta w_1&=\eta g b_1=0.008093\\
-\Delta w_2&=\eta g b_2=0.010341\\
-\Delta v_{A1}&=\eta e_1A=0.0006636\\
-\Delta v_{A2}&=\eta e_2A=0.001274\\
-\Delta v_{B1}&=\eta e_1B=0.0009954\\
-\Delta v_{B2}&=\eta e_2B=0.001911
+V_1=V_0-(\hat{y}-y)w_0^Tx=\begin{bmatrix}
+0.6226 & 0.1339\\
+0.2362 & 0.7542
+\end{bmatrix}
 \end{align*}
 $$
 
-更新后的权重:
 $$
-\begin{align*}
-w_1&=w_1+\Delta w_1=0.508093\\
-w_2&=w_2+\Delta w_2=0.810341\\
-v_{A1}&=v_{A1}+\Delta v_{A1}=0.6006636\\
-v_{A2}&=v_{A2}+\Delta v_{A2}=0.101274\\
-v_{B1}&=v_{B1}+\Delta v_{B1}=0.2009953\\
-v_{B2}&=v_{B2}+\Delta v_{B2}=0.701911\\
-\end{align*}
+w_1=w_0-(\hat{y}-y)b_0=V_0=\begin{bmatrix}
+0.5407\\
+0.8520
+\end{bmatrix}
 $$
+
+
+
 更新后输出和平方损失
 $$
-\begin{align*}
-b_1&=0.1804\\
-b_2&=0.2308\\
-\hat{y}&=0.2787\\
-\frac{1}{2}(y-\hat{y})^2&=0.0245
-\end{align*}
+b_1=\begin{bmatrix}
+0.1954\\
+0.2531
+\end{bmatrix}
+\\
+
+y_1=0.321227\\
+
+\frac{1}{2}(y-\hat{y})^2=0.0160
 $$
 显然，平方损失值下降了
 
@@ -121,4 +131,41 @@ $$
 #### ▲
 
 ![image-20221022152244767](C:/Users/voyage/AppData/Roaming/Typora/typora-user-images/image-20221022152244767.png)
+
+取
+$$
+\alpha' = \begin{bmatrix}
+\alpha\\
+\hat{\alpha}
+\end{bmatrix}
+$$
+
+$$
+v = \begin{bmatrix}
+-y - \epsilon1_m\\
+y - \epsilon1_m
+\end{bmatrix}
+$$
+
+$$
+u = \begin{bmatrix}
+1_m\\
+-1_m
+\end{bmatrix}
+$$
+
+$$
+K'=\begin{bmatrix}
+I_m\\
+-I
+\end{bmatrix}K[I&-I]
+$$
+
+$$
+K[i,j]=\kappa(x_i,x_j)
+$$
+
+$$
+\Tex{}
+$$
 
