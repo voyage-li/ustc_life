@@ -16,7 +16,8 @@ $$
 ```bash
 L0: if i <= 10 goto L1
 	goto L2
-L1: a[i]:=0
+L1: t = i * 4 
+	a[t]:=0
 L2:
 ```
 
@@ -24,7 +25,7 @@ L2:
 
 $$
 \begin{align*}
-P&\rightarrow\ \{D.offset_1=0;\}\ D\ \{P.offset=D.offset_2\}\\
+P&\rightarrow\ \{D.offset_1=0;\}\ D\ \{P.offset=D.offset_2\};S\\
 D&\rightarrow\  \{D_1.offset_1=D.offset_1;\}\ D_1;\ \{D_2.offset_1=D_1.offset_2;\}\ D_2\ \ \{ D.offset_2=D_2.offset_2;\} \\
 D&\rightarrow id:T\ \{enter(id.lexeme,T.type,D.offset_1);\ D.offset_2=D.offset_1+T.width;\}\\
 T&\rightarrow integer\  \{T.type = integer;\ T.width=4;\}\\
