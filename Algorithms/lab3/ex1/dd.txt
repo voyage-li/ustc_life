@@ -1,0 +1,22 @@
+STRLEN:
+Niue
+Iceland
+Slovenia
+EI Salvador
+United States
+United Kingdom
+Solomon Islands
+Papua New Guinea
+United Arab Emirates
+Saint Vincent and the Grenadines
+ASCII:
+EI Salvador
+Iceland
+Niue
+Papua New Guinea
+Saint Vincent and the Grenadines
+Slovenia
+Solomon Islands
+United Arab Emirates
+United Kingdom
+United States
