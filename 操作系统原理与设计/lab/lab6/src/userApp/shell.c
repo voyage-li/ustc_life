@@ -105,27 +105,40 @@ void help_help(void)
 
 int help(int argc, unsigned char **argv)
 {
-    int i;
-    struct cmd *tmpCmd = ourCmds;
-    help_help();
+    // int i;
+    // struct cmd *tmpCmd = ourCmds;
+    // help_help();
 
-    if (argc == 1)
-        return listCmds(argc, argv);
-    if (argc > 2)
-        return 1;
+    // if (argc == 1)
+    //     return listCmds(argc, argv);
+    // if (argc > 2)
+    //     return 1;
 
-    while (tmpCmd != NULL)
+    // while (tmpCmd != NULL)
+    // {
+    //     if (strcmp(argv[1], tmpCmd->cmd) == 0)
+    //     {
+    //         if (tmpCmd->help_func != NULL)
+    //             tmpCmd->help_func();
+    //         else
+    //             myPrintf(0x7, "%s\n", tmpCmd->description);
+    //         break;
+    //     }
+    //     tmpCmd = tmpCmd->nextCmd;
+    // }
+    int loc = 0x0061FE00;
+    for (int i = 0; i < 12; i++)
+        *(unsigned *)(loc + i) = i;
+    char(*a)[4] = loc;
+    for (int i = 0; i < 3; i++)
     {
-        if (strcmp(argv[1], tmpCmd->cmd) == 0)
-        {
-            if (tmpCmd->help_func != NULL)
-                tmpCmd->help_func();
-            else
-                myPrintf(0x7, "%s\n", tmpCmd->description);
-            break;
-        }
-        tmpCmd = tmpCmd->nextCmd;
+        for (int j = 0; j < 4; j++)
+            myPrintf(0x7, "%2d ", a[i][j]);
+        myPrintf(0x7, "\n");
     }
+    char *p = *a;
+    char(*q)[4] = a;
+
     return 0;
 }
 
