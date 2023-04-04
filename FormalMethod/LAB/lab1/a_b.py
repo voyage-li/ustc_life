@@ -1,4 +1,5 @@
 from z3 import *
+import random
 
 
 def num_to_bit(num):
@@ -19,6 +20,7 @@ def NXor(p, q):
 
 
 def cal_a_b(a, b):
+    assert type(a) == int and type(b) == int
     stra = num_to_bit(a)
     strb = num_to_bit(b)
     if len(strb) > len(stra):
@@ -52,5 +54,28 @@ def cal_a_b(a, b):
         return int(ans, 2)
 
 
+def judge():
+    a = random.randint(1, 1000)
+    b = random.randint(1, 1000)
+    c = random.randint(1, 2)
+    if c == 1:
+        if a + b == cal_a_b(a, b):
+            print(f"{a} + {b} = {a + b}")
+            return 1
+        else:
+            print(f"Error at {a} + {b}")
+            return -1
+    else:
+        b = random.randint(1, a)
+        if a - b == cal_a_b(a, -b):
+            print(f"{a} - {b} = {a - b}")
+            return 1
+        else:
+            print(f"Error at {a} - {b}")
+            return -1
+
+
 if __name__ == "__main__":
-    cal_a_b(13, 7)
+    for i in range(100):
+        if judge() == -1:
+            break

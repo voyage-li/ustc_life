@@ -24,7 +24,8 @@ def n_queen_smt(n):
         return -1
     else:
         result = s.model()
-        return end - start
+        s = str(end - start)
+        return s[: s.find(".") + 5]
         # for i in range(n):
         # for j in range(n):
         # print("Q" if result[Q[i]] == j + 1 else "*", end=" ")
@@ -90,7 +91,8 @@ def n_queen_sat(n):
         return -1
     else:
         result = s.model()
-        return end - start
+        s = str(end - start)
+        return s[: s.find(".") + 5]
         # for i in range(n):
         # for j in range(n):
         # print("Q" if result[P[i][j]] == True else "*", end=" ")
@@ -104,7 +106,8 @@ def fun(n):
 if __name__ == "__main__":
     n = 15
     for i in range(4, 41):
-        print(i, fun(i))
+        a, b = fun(i)
+        print("|", i, "|", a, "|", b, "|")
     # lsmt = []
     # lsat = []
     # for n in range(8, 41):
