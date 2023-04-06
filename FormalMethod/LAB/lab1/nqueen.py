@@ -27,8 +27,8 @@ def n_queen_smt(n):
         s = str(end - start)
         return s[: s.find(".") + 5]
         # for i in range(n):
-        # for j in range(n):
-        # print("Q" if result[Q[i]] == j + 1 else "*", end=" ")
+        #   for j in range(n):
+        #       print("Q" if result[Q[i]] == j + 1 else "*", end=" ")
         # print("")
 
 
@@ -94,8 +94,8 @@ def n_queen_sat(n):
         s = str(end - start)
         return s[: s.find(".") + 5]
         # for i in range(n):
-        # for j in range(n):
-        # print("Q" if result[P[i][j]] == True else "*", end=" ")
+        #   for j in range(n):
+        #       print("Q" if result[P[i][j]] == True else "*", end=" ")
         # print("")
 
 
@@ -104,22 +104,6 @@ def fun(n):
 
 
 if __name__ == "__main__":
-    n = 15
     for i in range(4, 41):
         a, b = fun(i)
         print("|", i, "|", a, "|", b, "|")
-    # lsmt = []
-    # lsat = []
-    # for n in range(8, 41):
-    #     # print("SMT")
-    #     start = time.process_time()
-    #     n_queen_smt(n)
-    #     end = time.process_time()
-    #     lsmt.append(end - start)
-
-    #     # print("SAT")
-    #     start = time.process_time()
-    #     n_queen_sat(n)
-    #     end = time.process_time()
-    #     lsat.append(end - start)
-    #     print(n, lsmt[n - 8], lsat[n - 8])
