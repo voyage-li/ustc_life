@@ -62,7 +62,7 @@ insert into Borrow value('b1', 'r2', '2022-02-22', '2022-03-10');
 insert into Borrow value('b2', 'r2', '2022-02-22', '2022-04-10');
 insert into Borrow value('b11', 'r2', '2022-01-11', '2022-02-10');
 insert into Borrow value('b16', 'r2', '2022-01-11', '2022-02-13');
-insert into Borrow value('b19', 'r2', '2023-04-8', NULL);
+insert into Borrow value('b19', 'r2', '2023-04-18', NULL);
 
 insert into Borrow value('b1', 'r3', '2022-04-14', '2022-06-19');
 insert into Borrow value('b4', 'r3', '2022-01-14', '2022-04-09');

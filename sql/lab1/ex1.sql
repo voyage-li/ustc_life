@@ -41,7 +41,7 @@ create table `lab1`.`Borrow`(
 create table `lab1`.`Reserve`(
     `bookID` char(8) not null,
     `readerID` char(8) not null,
-    `reserveDate` date not null,
+    `reserveDate` date not null default (now()),
     `takeDate` date,
     primary key(`bookID`,`readerID`,`reserveDate`),
     check (`reserveDate` < `takeDate`)
