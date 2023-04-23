@@ -6,7 +6,7 @@ begin
     set ret = 0;
     start transaction;
 
-    select bookID into tmp from `Borrow` where boid = bookID and rdid = readerID;
+    select bookID into tmp from `Borrow` where boid = bookID and rdid = readerID and returnDate is null;
     if tmp is null then
         set ret = -1;
         rollback;

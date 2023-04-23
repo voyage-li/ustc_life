@@ -16,9 +16,8 @@ begin
         rollback;
     end if;
     
-
-    select readerID into respeople from `Reserve` where bookID = boid and readerID != rdid;
-    if respeople is not null then
+    if exists(select * from `Reserve` where bookID = boid and readerID != rdid) and
+    not exists(select * from `Reserve` where bookID = boid and readerID = rdid) then
         set ret = -1;
         rollback;
     end if;
