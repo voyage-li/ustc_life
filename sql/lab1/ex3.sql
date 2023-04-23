@@ -11,9 +11,11 @@ begin
         update `Reader` set ID = newid where ID = oldid;
         update `Borrow` set readerID = newid where readerID = oldid;
         set FOREIGN_KEY_CHECKS = 1;
+        select 'Success!';
         commit;
     else
         set ret = -1;
+        select 'Fail!';
         rollback;
     end if;
 end//
