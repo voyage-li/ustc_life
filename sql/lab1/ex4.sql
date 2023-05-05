@@ -1,3 +1,4 @@
+-- Active: 1682256568013@@127.0.0.1@3306@lab1
 drop procedure if exists borrowBook;
 delimiter //
 create procedure borrowBook(in rdid char(8), in boid char(8), out ret int)
@@ -7,6 +8,14 @@ label:begin
     declare books int;
     set ret = 0;
     start transaction;
+
+    if not exists(select * from Reader where ID = rdid)
+    or not exists(select * from Book where ID = boid) then
+        set ret = -1;
+        select 'not exists reader or book!'
+        rollback;
+        leave label;
+    end if;
 
     select borrowDate into tmp from `Reader`,`Borrow` 
     where `Reader`.ID = `Borrow`.readerID and `Reader`.ID = rdid 
