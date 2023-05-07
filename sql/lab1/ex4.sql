@@ -27,6 +27,13 @@ label:begin
         leave label;
     end if;
     
+    if exists(select * from Book where ID = boid and status = 1) then
+        set ret = -1;
+        select 'can not borrow!'
+        rollback;
+        leave label;
+    end if;
+
     if exists(select * from `Reserve` where bookID = boid and readerID != rdid) and
     not exists(select * from `Reserve` where bookID = boid and readerID = rdid) then
         set ret = -1;

@@ -2,10 +2,11 @@ create database if not exists lab1;
 
 use lab1;
 
+drop table if exists `Reserve`;  
+
 drop table if exists `Borrow`;
 drop table if exists `Book`;
 drop table if exists `Reader`;  
-drop table if exists `Reserve`;  
 
 
 create table `lab1`.`Book`(
@@ -44,5 +45,7 @@ create table `lab1`.`Reserve`(
     `reserveDate` date not null default (now()),
     `takeDate` date,
     primary key(`bookID`,`readerID`,`reserveDate`),
+    foreign key(`bookID`) references `lab1`.`Book` (`ID`),
+    foreign key(`readerID`) references `lab1`.`Reader` (`ID`),
     check (`reserveDate` < `takeDate`)
 );
