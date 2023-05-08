@@ -31,9 +31,13 @@ VAR
 ASSIGN
     init(value) := n;
     next(value) := case
-                        (value = n) : {n, t};
-                        (value = t) & (other != c) : c;
-                        (value = c) : {n, c};
+                        (value = n) & (other = n) : {t};
+                        (value = n) & (other = t) : {t};
+                        (value = n) & (other = c) : {t};
+                        (value = t) & (other = n) : {c};
+                        (value = t) & (other = t) : {c};
+                        (value = c) & (other = n) : {n};
+                        (value = c) & (other = t) : {n};
                         TRUE : value;
                     esac;
 FAIRNESS running
