@@ -5,7 +5,8 @@ create procedure updateReaderID(in oldid char(8), in newid char(8), out ret int)
 begin 
     set ret = 0;
     start transaction;
-    if exists(select * from `Reader` where ID = oldid) then
+    if exists(select * from `Reader` where ID = oldid) 
+    and not exists(select * from Reader where ID = newid) then
         set FOREIGN_KEY_CHECKS = 0;
         update `Reader` set ID = newid where ID = oldid;
         update `Borrow` set readerID = newid where readerID = oldid;
