@@ -1,5 +1,5 @@
 #!/bin/bash -v
-rm -rf ./astar ../output/*
+rm -rf ./astar
 
 if [ $1 -eq 0 ]; then
     g++ -DDEBUG astar.cpp -o astar -O3

@@ -1,16 +1,20 @@
 #include <bits/stdc++.h>
 // #define DEBUG
+
+float calculate(std::vector<std::vector<int>> &data);
+
 struct node
 {
     int i, j, s;
-    float value;
-    friend bool operator>(struct node n1, struct node n2)
-    {
-        return n1.value < n2.value;
-    }
+    int f;
+    std::vector<std::vector<int>> data;
+    std::vector<std::vector<int>> visist;
     friend bool operator<(struct node n1, struct node n2)
     {
-        return n1.value > n2.value;
+        if (n1.f + calculate(n1.data) == n2.f + calculate(n2.data))
+            return n1.f < n2.f;
+        else
+            return n1.f + calculate(n1.data) > n2.f + calculate(n2.data);
     }
 };
 
@@ -28,8 +32,9 @@ void Onlyreverse(std::vector<std::vector<int>> &data, int n, int i, int j)
         data[i][j] = !data[i][j];
 }
 
-int move(std::vector<std::vector<int>> &data, int n, int i, int j, int s)
+int move(std::vector<std::vector<int>> &data, int i, int j, int s)
 {
+    int n = data.size();
     if (s == 1)
     {
         if (j + 1 >= n || i - 1 < 0)
@@ -127,8 +132,9 @@ int cal1(std::vector<std::vector<int>> &data, int n, int i, int j, int s, int fl
     return ans;
 }
 
-float calculate(std::vector<std::vector<int>> &data, int n)
+float calculate(std::vector<std::vector<int>> &data)
 {
+    int n = data.size();
     int cnt = 0;
     std::vector<std::vector<int>> tmp = data;
     int f = 3;
@@ -160,67 +166,54 @@ float calculate(std::vector<std::vector<int>> &data, int n)
                     continue;
                 }
 
-    return cnt / 3.0;
+    return cnt;
 }
 
-int astar(std::vector<std::vector<int>> &data, int n, std::vector<std::vector<int>> &visit)
+std::vector<std::vector<int>> astar(std::vector<std::vector<int>> data)
 {
-#ifdef DEBUG
-    for (int i = 0; i < n; i++)
-    {
-        for (int j = 0; j < n; j++)
-        {
-            std::cout << data[i][j] << " ";
-        }
-        std::cout << std::endl;
-    }
-    std::cout << "-------------------------\n";
-#endif
+    int n = data.size();
     std::priority_queue<struct node> pro;
-    for (int i = 0; i < n; i++)
+    std::set<std::vector<std::vector<int>>> NSame;
+    std::vector<std::vector<int>> visit(n, std::vector<int>(n, 0));
+    struct node first;
+    first.data = data;
+    first.f = 0;
+    first.visist = visit;
+    pro.push(first);
+    while (!pro.empty())
     {
-        for (int j = 0; j < n; j++)
+        std::vector<std::vector<int>> now = pro.top().data;
+        std::vector<std::vector<int>> vis = pro.top().visist;
+        int fmp = pro.top().f;
+        pro.pop();
+#ifdef DEBUG
+        std::cout << fmp << "+" << calculate(now) << "=" << fmp + calculate(now) << std::endl;
+#endif
+        for (int i = 0; i < n; i++)
         {
-            for (int p = 0; p < 4; p++)
+            for (int j = 0; j < n; j++)
             {
-                struct node tmp;
-                if (move(data, n, i, j, p + 1) == -1)
-                    move(data, n, i, j, p + 1);
-                tmp.i = i;
-                tmp.j = j;
-                tmp.s = p + 1;
-                tmp.value = calculate(data, n);
-                pro.push(tmp);
-                move(data, n, i, j, p + 1);
+                for (int p = 1; p <= 4; p++)
+                {
+                    if (move(now, i, j, p) == -1)
+                        continue;
+                    struct node tmp;
+                    tmp.i = i;
+                    tmp.j = j;
+                    tmp.s = p;
+                    tmp.f = fmp + 1;
+                    tmp.data = now;
+                    tmp.visist = vis;
+                    tmp.visist[i][j] ^= 1 << (p - 1);
+                    if (calculate(tmp.data) == 0)
+                        return tmp.visist;
+                    pro.push(tmp);
+                    move(now, i, j, p);
+                }
             }
         }
     }
-    while (!pro.empty())
-    {
-        struct node tmp = pro.top();
-        pro.pop();
-        if (visit[tmp.i][tmp.j] & (1 << (tmp.s - 1)))
-            visit[tmp.i][tmp.j] -= 1 << (tmp.s - 1);
-        else
-            visit[tmp.i][tmp.j] += 1 << (tmp.s - 1);
-        move(data, n, tmp.i, tmp.j, tmp.s);
-        if (tmp.value == 0 || astar(data, n, visit))
-            return 1;
-        visit[tmp.i][tmp.j] -= 1 << (tmp.s - 1);
-        move(data, n, tmp.i, tmp.j, tmp.s);
-    }
-#ifdef DEBUG
-    for (int i = 0; i < n; i++)
-    {
-        for (int j = 0; j < n; j++)
-        {
-            std::cout << data[i][j] << " ";
-        }
-        std::cout << "\n\n\n"
-                  << std::endl;
-    }
-#endif
-    return 0;
+    return visit;
 }
 
 int main()
@@ -232,8 +225,19 @@ int main()
         for (int j = 0; j < n; j++)
             std::cin >> data[i][j];
 
-    std::vector<std::vector<int>> visit(n, std::vector<int>(n, 0));
-    astar(data, n, visit);
+    // int t;
+    // std::cin >> t;
+    // while (t--)
+    // {
+    //     int i, j, s;
+    //     scanf("%d,%d,%d", &i, &j, &s);
+    //     move(data, i, j, s);
+    // }
+    // for (int i = 0; i < n; i++)
+    //     for (int j = 0; j < n; j++)
+    //         std::cout << data[i][j];
+    // return 0;
+    auto visit = astar(data);
 
     int num = 0;
 
