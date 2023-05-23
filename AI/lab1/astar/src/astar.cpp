@@ -18,14 +18,16 @@ struct node
     }
 };
 
-void reverse(std::vector<std::vector<int>> &data, int n, int i, int j)
+void reverse(std::vector<std::vector<int>> &data, int i, int j)
 {
+    int n = data.size();
     if (i < 0 || j < 0 || i >= n || j >= n)
         return;
     data[i][j] = !data[i][j];
 }
-void Onlyreverse(std::vector<std::vector<int>> &data, int n, int i, int j)
+void Onlyreverse(std::vector<std::vector<int>> &data, int i, int j)
 {
+    int n = data.size();
     if (i < 0 || j < 0 || i >= n || j >= n)
         return;
     if (data[i][j])
@@ -39,39 +41,40 @@ int move(std::vector<std::vector<int>> &data, int i, int j, int s)
     {
         if (j + 1 >= n || i - 1 < 0)
             return -1;
-        reverse(data, n, i, j);
-        reverse(data, n, i, j + 1);
-        reverse(data, n, i - 1, j);
+        reverse(data, i, j);
+        reverse(data, i, j + 1);
+        reverse(data, i - 1, j);
     }
     if (s == 2)
     {
         if (j - 1 < 0 || i - 1 < 0)
             return -1;
-        reverse(data, n, i, j);
-        reverse(data, n, i - 1, j);
-        reverse(data, n, i, j - 1);
+        reverse(data, i, j);
+        reverse(data, i - 1, j);
+        reverse(data, i, j - 1);
     }
     if (s == 3)
     {
         if (j - 1 < 0 || i + 1 >= n)
             return -1;
-        reverse(data, n, i, j);
-        reverse(data, n, i, j - 1);
-        reverse(data, n, i + 1, j);
+        reverse(data, i, j);
+        reverse(data, i, j - 1);
+        reverse(data, i + 1, j);
     }
     if (s == 4)
     {
         if (j + 1 >= n || i + 1 >= n)
             return -1;
-        reverse(data, n, i, j);
-        reverse(data, n, i + 1, j);
-        reverse(data, n, i, j + 1);
+        reverse(data, i, j);
+        reverse(data, i + 1, j);
+        reverse(data, i, j + 1);
     }
     return 0;
 }
 
-int cal1(std::vector<std::vector<int>> &data, int n, int i, int j, int s, int flag)
+int cal1(std::vector<std::vector<int>> &data, int i, int j, int s, int flag)
 {
+    int n = data.size();
     int ans = 0;
     if (s == 1)
     {
@@ -82,9 +85,9 @@ int cal1(std::vector<std::vector<int>> &data, int n, int i, int j, int s, int fl
         ans += data[i - 1][j];
         if (ans == flag)
         {
-            Onlyreverse(data, n, i, j);
-            Onlyreverse(data, n, i, j + 1);
-            Onlyreverse(data, n, i - 1, j);
+            Onlyreverse(data, i, j);
+            Onlyreverse(data, i, j + 1);
+            Onlyreverse(data, i - 1, j);
         }
     }
     if (s == 2)
@@ -96,9 +99,9 @@ int cal1(std::vector<std::vector<int>> &data, int n, int i, int j, int s, int fl
         ans += data[i][j - 1];
         if (ans == flag)
         {
-            Onlyreverse(data, n, i, j);
-            Onlyreverse(data, n, i - 1, j);
-            Onlyreverse(data, n, i, j - 1);
+            Onlyreverse(data, i, j);
+            Onlyreverse(data, i - 1, j);
+            Onlyreverse(data, i, j - 1);
         }
     }
     if (s == 3)
@@ -110,9 +113,9 @@ int cal1(std::vector<std::vector<int>> &data, int n, int i, int j, int s, int fl
         ans += data[i + 1][j];
         if (ans == flag)
         {
-            Onlyreverse(data, n, i, j);
-            Onlyreverse(data, n, i, j - 1);
-            Onlyreverse(data, n, i + 1, j);
+            Onlyreverse(data, i, j);
+            Onlyreverse(data, i, j - 1);
+            Onlyreverse(data, i + 1, j);
         }
     }
     if (s == 4)
@@ -124,9 +127,9 @@ int cal1(std::vector<std::vector<int>> &data, int n, int i, int j, int s, int fl
         ans += data[i][j + 1];
         if (ans == flag)
         {
-            Onlyreverse(data, n, i, j);
-            Onlyreverse(data, n, i, j + 1);
-            Onlyreverse(data, n, i + 1, j);
+            Onlyreverse(data, i, j);
+            Onlyreverse(data, i, j + 1);
+            Onlyreverse(data, i + 1, j);
         }
     }
     return ans;
@@ -141,7 +144,7 @@ float calculate(std::vector<std::vector<int>> &data)
     for (int i = 0; i < n; i++)
         for (int j = 0; j < n; j++)
             for (int p = 1; p <= 4; p++)
-                if (cal1(tmp, n, i, j, p, f) == f)
+                if (cal1(tmp, i, j, p, f) == f)
                 {
                     cnt += 1;
                     continue;
@@ -151,7 +154,7 @@ float calculate(std::vector<std::vector<int>> &data)
     for (int i = 0; i < n; i++)
         for (int j = 0; j < n; j++)
             for (int p = 1; p <= 4; p++)
-                if (cal1(tmp, n, i, j, p, f) == f)
+                if (cal1(tmp, i, j, p, f) == f)
                 {
                     cnt += 2;
                     continue;
@@ -160,13 +163,13 @@ float calculate(std::vector<std::vector<int>> &data)
     for (int i = 0; i < n; i++)
         for (int j = 0; j < n; j++)
             for (int p = 1; p <= 4; p++)
-                if (cal1(tmp, n, i, j, p, f) == f)
+                if (cal1(tmp, i, j, p, f) == f)
                 {
                     cnt += 3;
                     continue;
                 }
 
-    return cnt;
+    return cnt / 3.0;
 }
 
 std::vector<std::vector<int>> astar(std::vector<std::vector<int>> data)
@@ -207,7 +210,8 @@ std::vector<std::vector<int>> astar(std::vector<std::vector<int>> data)
                     tmp.visist[i][j] ^= 1 << (p - 1);
                     if (calculate(tmp.data) == 0)
                         return tmp.visist;
-                    pro.push(tmp);
+                    if (!NSame.count(tmp.data))
+                        pro.push(tmp);
                     move(now, i, j, p);
                 }
             }
