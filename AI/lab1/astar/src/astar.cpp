@@ -20,14 +20,14 @@ double h(std::vector<int> data);
 int reverse(std::vector<int> &data, int i, int j);
 int onlyReverse(std::vector<int> &data, int i, int j);
 int move(std::vector<int> &data, int i, int j, int s);
-std::vector<std::vector<int>> astar(std::vector<int> data);
+std::queue<std::tuple<int, int, int>> astar(std::vector<int> data);
 
 struct node
 {
     int i, j, s;
     int g;
     std::vector<int> state;
-    std::vector<std::vector<int>> vis;
+    std::queue<std::tuple<int, int, int>> vis;
     friend bool operator<(struct node n1, struct node n2)
     {
         if (n1.g + h(n1.state) == n2.g + h(n2.state))
@@ -51,21 +51,16 @@ int main()
         }
     auto visit = astar(data);
 
-    int num = 0;
-
-    for (int i = 0; i < n; i++)
-        for (int j = 0; j < n; j++)
-            for (int p = 0; p < 4; p++)
-                if (visit[i][j] & (1 << p))
-                    num += 1;
+    int num = visit.size();
 
     std::cout << num << std::endl;
 
-    for (int i = 0; i < n; i++)
-        for (int j = 0; j < n; j++)
-            for (int p = 0; p < 4; p++)
-                if (visit[i][j] & (1 << p))
-                    std::cout << i << "," << j << "," << p + 1 << std::endl;
+    while (!visit.empty())
+    {
+        auto tmp = visit.front();
+        visit.pop();
+        std::cout << std::get<0>(tmp) << "," << std::get<1>(tmp) << "," << std::get<2>(tmp) << std::endl;
+    }
 
     return 0;
 }
@@ -255,12 +250,12 @@ int move(std::vector<int> &data, int i, int j, int s)
     return ans;
 }
 
-std::vector<std::vector<int>> astar(std::vector<int> data)
+std::queue<std::tuple<int, int, int>> astar(std::vector<int> data)
 {
     int n = data.size();
     std::priority_queue<struct node> fque;
     std::set<std::vector<int>> NSame;
-    std::vector<std::vector<int>> visit(n, std::vector<int>(n, 0));
+    std::queue<std::tuple<int, int, int>> visit;
     struct node firststate = {0, 0, 0, 0, data, visit};
     fque.push(firststate);
     while (!fque.empty())
@@ -281,11 +276,11 @@ std::vector<std::vector<int>> astar(std::vector<int> data)
                         continue;
                     if (h(tmp.state) == 0)
                     {
-                        tmp.vis[i][j] ^= 1 << (p - 1);
+                        tmp.vis.push(std::make_tuple(i, j, p));
                         return tmp.vis;
                     }
                     struct node next = {i, j, p, tmp.g + 1, tmp.state, tmp.vis};
-                    next.vis[i][j] ^= 1 << (p - 1);
+                    next.vis.push(std::make_tuple(i, j, p));
                     if (!NSame.count(next.state))
                     {
                         tque.push(next);

@@ -168,8 +168,104 @@ float calculate(std::vector<std::vector<int>> &data)
                     cnt += 3;
                     continue;
                 }
+    int cnt1 = cnt;
+    tmp = data;
+    cnt = 0;
+    f = 3;
+    for (int i = n - 1; i >= 0; i--)
+        for (int j = n - 1; j >= 0; j--)
+            for (int p = 1; p <= 4; p++)
+                if (cal1(tmp, i, j, p, f) == f)
+                {
+                    cnt += 1;
+                    continue;
+                }
 
-    return cnt;
+    f = 2;
+    for (int i = n - 1; i >= 0; i--)
+        for (int j = n - 1; j >= 0; j--)
+            for (int p = 1; p <= 4; p++)
+                if (cal1(tmp, i, j, p, f) == f)
+                {
+                    cnt += 2;
+                    continue;
+                }
+    f = 1;
+    for (int i = n - 1; i >= 0; i--)
+        for (int j = n - 1; j >= 0; j--)
+            for (int p = 1; p <= 4; p++)
+                if (cal1(tmp, i, j, p, f) == f)
+                {
+                    cnt += 3;
+                    continue;
+                }
+    if (cnt1 > cnt)
+        cnt1 = cnt;
+    tmp = data;
+    cnt = 0;
+    f = 3;
+    for (int i = 0; i < n; i++)
+        for (int j = n - 1; j >= 0; j--)
+            for (int p = 1; p <= 4; p++)
+                if (cal1(tmp, i, j, p, f) == f)
+                {
+                    cnt += 1;
+                    continue;
+                }
+
+    f = 2;
+    for (int i = 0; i < n; i++)
+        for (int j = n - 1; j >= 0; j--)
+            for (int p = 1; p <= 4; p++)
+                if (cal1(tmp, i, j, p, f) == f)
+                {
+                    cnt += 2;
+                    continue;
+                }
+    f = 1;
+    for (int i = 0; i < n; i++)
+        for (int j = n - 1; j >= 0; j--)
+            for (int p = 1; p <= 4; p++)
+                if (cal1(tmp, i, j, p, f) == f)
+                {
+                    cnt += 3;
+                    continue;
+                }
+    if (cnt1 > cnt)
+        cnt1 = cnt;
+    tmp = data;
+    cnt = 0;
+    f = 3;
+    for (int i = n - 1; i >= 0; i--)
+        for (int j = 0; j < n; j++)
+            for (int p = 1; p <= 4; p++)
+                if (cal1(tmp, i, j, p, f) == f)
+                {
+                    cnt += 1;
+                    continue;
+                }
+
+    f = 2;
+    for (int i = n - 1; i >= 0; i--)
+        for (int j = 0; j < n; j++)
+            for (int p = 1; p <= 4; p++)
+                if (cal1(tmp, i, j, p, f) == f)
+                {
+                    cnt += 2;
+                    continue;
+                }
+    f = 1;
+    for (int i = n - 1; i >= 0; i--)
+        for (int j = 0; j < n; j++)
+            for (int p = 1; p <= 4; p++)
+                if (cal1(tmp, i, j, p, f) == f)
+                {
+                    cnt += 3;
+                    continue;
+                }
+    if (cnt1 > cnt)
+        cnt1 = cnt;
+    return cnt1;
 }
 
 std::vector<std::vector<int>> astar(std::vector<std::vector<int>> data)
