@@ -26,13 +26,13 @@ struct node
 {
     int i, j, s;
     int g;
-    int hvalue;
+    std::vector<int> state;
     std::queue<std::tuple<int, int, int>> vis;
     friend bool operator<(struct node n1, struct node n2)
     {
-        if (n1.g + n1.hvalue == n2.g + n2.hvalue)
+        if (n1.g + h(n1.state) == n2.g + h(n2.state))
             return n1.g < n2.g;
-        return n1.g + n1.hvalue > n2.g + n2.hvalue;
+        return n1.g + h(n1.state) > n2.g + h(n2.state);
     }
 };
 
@@ -256,22 +256,14 @@ std::queue<std::tuple<int, int, int>> astar(std::vector<int> data)
     std::priority_queue<struct node> fque;
     std::set<std::vector<int>> NSame;
     std::queue<std::tuple<int, int, int>> visit;
-    struct node firststate = {0, 0, 0, 0, 0, visit};
+    struct node firststate = {0, 0, 0, 0, data, visit};
     fque.push(firststate);
     while (!fque.empty())
     {
         struct node tmp = fque.top();
-        auto now = data;
-        auto road = tmp.vis;
-        while (!road.empty())
-        {
-            auto top_vis = road.front();
-            road.pop();
-            move(now, std::get<0>(top_vis), std::get<1>(top_vis), std::get<2>(top_vis));
-        }
         fque.pop();
 #ifdef DEBUG
-        std::cout << tmp.g << "+" << tmp.hvalue << "=" << tmp.g + tmp.hvalue << std::endl;
+        std::cout << tmp.g << "+" << h(tmp.state) << "=" << tmp.g + h(tmp.state) << std::endl;
 #endif
         std::priority_queue<struct node> tque;
         for (int i = 0; i < n; i++)
@@ -280,22 +272,21 @@ std::queue<std::tuple<int, int, int>> astar(std::vector<int> data)
             {
                 for (int p = 1; p <= 4; p++)
                 {
-                    if (move(now, i, j, p) == -1)
+                    if (move(tmp.state, i, j, p) == -1)
                         continue;
-                    int hnow = h(now);
-                    if (hnow == 0)
+                    if (h(tmp.state) == 0)
                     {
                         tmp.vis.push(std::make_tuple(i, j, p));
                         return tmp.vis;
                     }
-                    struct node next = {i, j, p, tmp.g + 1, hnow, tmp.vis};
+                    struct node next = {i, j, p, tmp.g + 1, tmp.state, tmp.vis};
                     next.vis.push(std::make_tuple(i, j, p));
-                    if (!NSame.count(now))
+                    if (!NSame.count(next.state))
                     {
                         tque.push(next);
-                        NSame.insert(now);
+                        NSame.insert(next.state);
                     }
-                    move(now, i, j, p);
+                    move(tmp.state, i, j, p);
                 }
             }
         }
