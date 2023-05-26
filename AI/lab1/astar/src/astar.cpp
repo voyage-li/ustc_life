@@ -16,7 +16,7 @@ std::string print(int num)
 }
 #endif
 
-double h(std::vector<int> data);
+int h(std::vector<int> data);
 int reverse(std::vector<int> &data, int i, int j);
 int onlyReverse(std::vector<int> &data, int i, int j);
 int move(std::vector<int> &data, int i, int j, int s);
@@ -26,7 +26,7 @@ struct node
 {
     int i, j, s;
     int g;
-    double hv;
+    int hv;
     std::queue<std::tuple<int, int, int>> vis;
     friend bool operator<(struct node n1, struct node n2)
     {
@@ -65,9 +65,9 @@ int main()
     return 0;
 }
 
-double h(std::vector<int> state)
+int h(std::vector<int> data)
 {
-    std::vector<int> data = state;
+    // std::vector<int> data = state;
     int n = data.size();
     int retValue = 0;
     for (int i = 0; i < n; i++)
