@@ -1,13 +1,13 @@
 #include <bits/stdc++.h>
 #define MAXN 999999
-int maxNow = 0;
+int maxNow = -1;
 int Nowans[MAXN];
 
 struct SaNode
 {
-    int people;
-    int isTrue;
-    int Already;
+    int people;  // 人
+    int isTrue;  // 是否满足请求
+    int Already; // 已经安排请求
     friend bool operator<(struct SaNode n1, struct SaNode n2)
     {
         if (n1.isTrue == n2.isTrue)
@@ -19,8 +19,8 @@ struct SaNode
 
 struct Node
 {
-    int loc;
-    int Remain;
+    int loc;    // 位置
+    int Remain; // 剩余值
     std::priority_queue<struct SaNode> ReLoc;
     friend bool operator<(struct Node n1, struct Node n2)
     {
@@ -33,10 +33,6 @@ struct Node
 
 int search(std::vector<std::vector<int>> &order, int ans[], int HaveOrder[], int N, int D, int S, int disorder)
 {
-#ifdef DEBUG
-    if (disorder == 1)
-        std::cout << disorder;
-#endif
     if (D * S - maxNow <= disorder)
         return 0;
     std::priority_queue<struct Node> q;
@@ -142,6 +138,11 @@ int main()
     int HaveOrder[N];
     memset(HaveOrder, 0, sizeof(HaveOrder));
     search(order, ans, HaveOrder, N, D, S, 0);
+    if (maxNow == -1)
+    {
+        std::cout << "No valid schedule found." << std::endl;
+        return 0;
+    }
     for (int i = 0; i < D; i++)
     {
         for (int j = 0; j < S; j++)

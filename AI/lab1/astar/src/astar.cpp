@@ -22,12 +22,14 @@ int onlyReverse(std::vector<int> &data, int i, int j);
 int move(std::vector<int> &data, int i, int j, int s);
 std::queue<std::tuple<int, int, int>> astar(std::vector<int> data);
 
+// 节点
 struct node
 {
     int i, j, s;
     int g;
     int hv;
     std::queue<std::tuple<int, int, int>> vis;
+    // 用三元组存储访问的路径
     friend bool operator<(struct node n1, struct node n2)
     {
         if (n1.g + n1.hv == n2.g + n2.hv)
@@ -65,11 +67,12 @@ int main()
     return 0;
 }
 
+// h估值函数 分八联通分量计算 每个连通分量除3 取整 再根据奇偶性适当+1
 int h(std::vector<int> data)
 {
-    // std::vector<int> data = state;
     int n = data.size();
     int retValue = 0;
+    // int cnt = 0;
     for (int i = 0; i < n; i++)
     {
         for (int j = 0; j < n; j++)
@@ -93,9 +96,12 @@ int h(std::vector<int> data)
             retValue += tmp;
         }
     }
+    // retValue = (cnt % 3) ? (cnt / 3 + 1) : (cnt / 3);
+    // retValue += (cnt % 2) ? (!(retValue % 2)) : (retValue % 2);
     return retValue;
 }
 
+// 只翻转1 不翻转0
 int onlyReverse(std::vector<int> &data, int i, int j)
 {
     int n = data.size();
@@ -111,7 +117,7 @@ int onlyReverse(std::vector<int> &data, int i, int j)
         return 0;
     }
 }
-
+// 翻转
 int reverse(std::vector<int> &data, int i, int j)
 {
     int n = data.size();
@@ -124,7 +130,7 @@ int reverse(std::vector<int> &data, int i, int j)
     else
         return 0;
 }
-
+// 操作，返回值是消除的1的个数
 int move(std::vector<int> &data, int i, int j, int s)
 {
     int n = data.size();
@@ -165,17 +171,20 @@ int move(std::vector<int> &data, int i, int j, int s)
     }
     return ans;
 }
-
-void judge(std::vector<int> &data, int i, int j, int s, int g, std::queue<std::tuple<int, int, int>> &vis, std::priority_queue<struct node> &fque)
+// 12L判断
+std::queue<std::tuple<int, int, int>> judge(std::vector<int> &data, int i, int j, int s, int g, std::queue<std::tuple<int, int, int>> &vis, std::priority_queue<struct node> &fque, int &flag)
 {
     if (move(data, i, j, s) == -1)
-        return;
+        return vis;
     struct node next = {i, j, s, g + 1, h(data), vis};
     next.vis.push(std::make_tuple(i, j, s));
     fque.push(next);
+    if (h(data) == 0)
+        flag = 1;
     move(data, i, j, s);
+    return next.vis;
 }
-
+// astar 返回搜索的路径队列 一次搜索只将覆盖一个1的12种L入队
 std::queue<std::tuple<int, int, int>> astar(std::vector<int> data)
 {
     int n = data.size();
@@ -183,6 +192,9 @@ std::queue<std::tuple<int, int, int>> astar(std::vector<int> data)
     std::queue<std::tuple<int, int, int>> visit;
     struct node firststate = {0, 0, 0, 0, h(data), visit};
     fque.push(firststate);
+#ifdef DEBUG
+    int cal_point = 0;
+#endif
     while (!fque.empty())
     {
         struct node tmp = fque.top();
@@ -194,9 +206,11 @@ std::queue<std::tuple<int, int, int>> astar(std::vector<int> data)
             auto movement = road.front();
             road.pop();
             move(now, std::get<0>(movement), std::get<1>(movement), std::get<2>(movement));
+            std::tuple<int, int, int>().swap(movement);
         }
+        std::queue<std::tuple<int, int, int>>().swap(road);
 #ifdef DEBUG
-        std::cout << tmp.g << "+" << tmp.hv << "=" << tmp.g + tmp.hv << std::endl;
+        std::cout << tmp.g << "+" << tmp.hv << "=" << tmp.g + tmp.hv << "      " << ++cal_point << std::endl;
 #endif
         int tmpi = -1, tmpj = -1;
         for (int i = 0; i < n; i++)
@@ -215,18 +229,45 @@ std::queue<std::tuple<int, int, int>> astar(std::vector<int> data)
         }
         if (tmpi == -1 && tmpj == -1)
             return tmp.vis;
-        judge(now, tmpi - 1, tmpj, 3, tmp.g, tmp.vis, fque);
-        judge(now, tmpi - 1, tmpj, 4, tmp.g, tmp.vis, fque);
-        judge(now, tmpi, tmpj + 1, 2, tmp.g, tmp.vis, fque);
-        judge(now, tmpi, tmpj + 1, 3, tmp.g, tmp.vis, fque);
-        judge(now, tmpi + 1, tmpj, 1, tmp.g, tmp.vis, fque);
-        judge(now, tmpi + 1, tmpj, 2, tmp.g, tmp.vis, fque);
-        judge(now, tmpi, tmpj - 1, 1, tmp.g, tmp.vis, fque);
-        judge(now, tmpi, tmpj - 1, 4, tmp.g, tmp.vis, fque);
-        judge(now, tmpi, tmpj, 1, tmp.g, tmp.vis, fque);
-        judge(now, tmpi, tmpj, 2, tmp.g, tmp.vis, fque);
-        judge(now, tmpi, tmpj, 3, tmp.g, tmp.vis, fque);
-        judge(now, tmpi, tmpj, 4, tmp.g, tmp.vis, fque);
+        int flag = -1;
+        std::queue<std::tuple<int, int, int>> ret;
+        ret = judge(now, tmpi - 1, tmpj, 3, tmp.g, tmp.vis, fque, flag);
+        if (flag == 1)
+            return ret;
+        ret = judge(now, tmpi - 1, tmpj, 4, tmp.g, tmp.vis, fque, flag);
+        if (flag == 1)
+            return ret;
+        ret = judge(now, tmpi, tmpj + 1, 2, tmp.g, tmp.vis, fque, flag);
+        if (flag == 1)
+            return ret;
+        ret = judge(now, tmpi, tmpj + 1, 3, tmp.g, tmp.vis, fque, flag);
+        if (flag == 1)
+            return ret;
+        ret = judge(now, tmpi + 1, tmpj, 1, tmp.g, tmp.vis, fque, flag);
+        if (flag == 1)
+            return ret;
+        ret = judge(now, tmpi + 1, tmpj, 2, tmp.g, tmp.vis, fque, flag);
+        if (flag == 1)
+            return ret;
+        ret = judge(now, tmpi, tmpj - 1, 1, tmp.g, tmp.vis, fque, flag);
+        if (flag == 1)
+            return ret;
+        ret = judge(now, tmpi, tmpj - 1, 4, tmp.g, tmp.vis, fque, flag);
+        if (flag == 1)
+            return ret;
+        ret = judge(now, tmpi, tmpj, 1, tmp.g, tmp.vis, fque, flag);
+        if (flag == 1)
+            return ret;
+        ret = judge(now, tmpi, tmpj, 2, tmp.g, tmp.vis, fque, flag);
+        if (flag == 1)
+            return ret;
+        ret = judge(now, tmpi, tmpj, 3, tmp.g, tmp.vis, fque, flag);
+        if (flag == 1)
+            return ret;
+        ret = judge(now, tmpi, tmpj, 4, tmp.g, tmp.vis, fque, flag);
+        if (flag == 1)
+            return ret;
+        std::vector<int>().swap(now);
     }
     return visit;
 }
