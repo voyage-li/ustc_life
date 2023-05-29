@@ -231,15 +231,27 @@ std::queue<std::tuple<int, int, int>> astar(std::vector<int> data)
             return tmp.vis;
         int flag = -1;
         std::queue<std::tuple<int, int, int>> ret;
-        ret = judge(now, tmpi - 1, tmpj, 3, tmp.g, tmp.vis, fque, flag);
-        if (flag == 1)
-            return ret;
-        ret = judge(now, tmpi - 1, tmpj, 4, tmp.g, tmp.vis, fque, flag);
-        if (flag == 1)
-            return ret;
-        ret = judge(now, tmpi, tmpj + 1, 2, tmp.g, tmp.vis, fque, flag);
-        if (flag == 1)
-            return ret;
+        if (tmpi == n - 1)
+        {
+            ret = judge(now, tmpi - 1, tmpj, 3, tmp.g, tmp.vis, fque, flag);
+            if (flag == 1)
+                return ret;
+            ret = judge(now, tmpi - 1, tmpj, 4, tmp.g, tmp.vis, fque, flag);
+            if (flag == 1)
+                return ret;
+            ret = judge(now, tmpi, tmpj + 1, 2, tmp.g, tmp.vis, fque, flag);
+            if (flag == 1)
+                return ret;
+            ret = judge(now, tmpi, tmpj - 1, 1, tmp.g, tmp.vis, fque, flag);
+            if (flag == 1)
+                return ret;
+            ret = judge(now, tmpi, tmpj, 1, tmp.g, tmp.vis, fque, flag);
+            if (flag == 1)
+                return ret;
+            ret = judge(now, tmpi, tmpj, 2, tmp.g, tmp.vis, fque, flag);
+            if (flag == 1)
+                return ret;
+        }
         ret = judge(now, tmpi, tmpj + 1, 3, tmp.g, tmp.vis, fque, flag);
         if (flag == 1)
             return ret;
@@ -249,16 +261,7 @@ std::queue<std::tuple<int, int, int>> astar(std::vector<int> data)
         ret = judge(now, tmpi + 1, tmpj, 2, tmp.g, tmp.vis, fque, flag);
         if (flag == 1)
             return ret;
-        ret = judge(now, tmpi, tmpj - 1, 1, tmp.g, tmp.vis, fque, flag);
-        if (flag == 1)
-            return ret;
         ret = judge(now, tmpi, tmpj - 1, 4, tmp.g, tmp.vis, fque, flag);
-        if (flag == 1)
-            return ret;
-        ret = judge(now, tmpi, tmpj, 1, tmp.g, tmp.vis, fque, flag);
-        if (flag == 1)
-            return ret;
-        ret = judge(now, tmpi, tmpj, 2, tmp.g, tmp.vis, fque, flag);
         if (flag == 1)
             return ret;
         ret = judge(now, tmpi, tmpj, 3, tmp.g, tmp.vis, fque, flag);
