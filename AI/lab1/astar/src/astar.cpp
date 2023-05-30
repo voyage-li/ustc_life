@@ -96,8 +96,6 @@ int h(std::vector<int> data)
             retValue += tmp;
         }
     }
-    // retValue = (cnt % 3) ? (cnt / 3 + 1) : (cnt / 3);
-    // retValue += (cnt % 2) ? (!(retValue % 2)) : (retValue % 2);
     return retValue;
 }
 
@@ -201,6 +199,7 @@ std::queue<std::tuple<int, int, int>> astar(std::vector<int> data)
         fque.pop();
         auto road = tmp.vis;
         auto now = data;
+        // 从路径恢复状态
         while (!road.empty())
         {
             auto movement = road.front();
@@ -231,6 +230,7 @@ std::queue<std::tuple<int, int, int>> astar(std::vector<int> data)
             return tmp.vis;
         int flag = -1;
         std::queue<std::tuple<int, int, int>> ret;
+        // 除了n，不检查前 6 个 L
         if (tmpi == n - 1)
         {
             ret = judge(now, tmpi - 1, tmpj, 3, tmp.g, tmp.vis, fque, flag);
