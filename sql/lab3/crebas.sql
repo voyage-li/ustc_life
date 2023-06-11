@@ -1,4 +1,5 @@
--- Active: 1682256568013@@127.0.0.1@3306@lab3
+-- Active: 1685774839374@@127.0.0.1@3306@lab3
+
 /*==============================================================*/
 
 /* DBMS name:      MySQL 5.0                                    */
@@ -59,7 +60,7 @@ create table
 
 create table
     Paper (
-        PaperID int not null auto_increment,
+        PaperID int not null,
         PaperName char(255),
         PaperFrom char(255),
         PaperYear date,
