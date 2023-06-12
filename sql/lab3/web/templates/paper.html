@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <title>登记论文</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/v4-shims.css">
+    <link rel="stylesheet" href="/static/plugins/bootstrap-3.4.1/css/bootstrap.css">
+    <link rel="stylesheet" href="/static/css/my.css">
+</head>
+
+<body>
+    <div class="total-wrap">
+        <div class="left-wrap">
+            <div class="left-blank"></div>
+            <div class="left-text-wrap">
+                <p class="left-text"><i class="fa fa-home"></i> <a href="/">管理主页</a></p>
+            </div>
+            <div class="left-text-wrap">
+                <p class="left-text"><i class="fa fa-book"></i> <a href="/paper">登记论文</a></p>
+            </div>
+            <div class="left-text-wrap">
+                <p class="left-text"><i class="fa fa-file"></i> <a href="/project">登记项目</a></p>
+            </div>
+            <div class="left-text-wrap">
+                <p class="left-text"><i class="fa fa-pencil-square"></i> <a href="/course">登记课程</a></p>
+            </div>
+            <div class="left-text-wrap">
+                <p class="left-text"><i class="fa fa-search"></i> <a href="/search">查询内容</a></p>
+            </div>
+            <form method="post" style="margin-top:70px;margin-left: 30%;margin-right: auto;">
+                <button class="btn btn-primary" type="submit">登出</button>
+            </form>
+        </div>
+        <div class="right-wrap">
+            <div class="inputforpaper">
+                <form method="post" action="/paper/">
+                    <div class="table-one-row">
+                        <div class="col-sm-5 form-group">
+                            <div>
+                                教师工号: <input type="text" name="techid" placeholder="输入教师工号"
+                                    value="{{form_data.techid if form_data else ''}}">
+                            </div>
+                        </div>
+                        <div class="col-sm-5 form-group">
+                            <div>
+                                论文序号: <input type="number" name="papid" placeholder="输入论文序号"
+                                    value="{{form_data.papid if form_data else ''}}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-one-row">
+
+                        <div class="col-sm-5 form-group">
+                            <div>
+                                论文名称: <input type="text" name="papname" placeholder="输入论文名称"
+                                    value="{{form_data.papname if form_data else ''}}">
+                            </div>
+                        </div>
+                        <div class="col-sm-5 form-group">
+                            <div>
+                                论文发表: <input type="text" name="papsource" placeholder="输入发表源"
+                                    value="{{form_data.papsource if form_data else ''}}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-one-row">
+
+                        <div class="col-sm-5 form-group">
+                            <div>
+                                发表年份: <input type="number" name="papyear" placeholder="输入发表年份"
+                                    value="{{form_data.papyear if form_data else ''}}">
+                            </div>
+                        </div>
+                        <div class="col-sm-5 form-group">
+                            <div>
+                                论文排名: <input type="number" name="rank" placeholder="输入论文排名"
+                                    value="{{form_data.rank if form_data else ''}}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-one-row">
+                        <div class="col-sm-5 form-group">
+                            <div>
+                                论文级别:
+                                <select name="paplevel" placeholder="输入论文级别">
+                                    <option value="1" {% if form_data and form_data.paplevel=="1" %}selected{% endif %}>
+                                        1-CCF-A</option>
+                                    <option value="2" {% if form_data and form_data.paplevel=="2" %}selected{% endif %}>
+                                        2-CCF-B</option>
+                                    <option value="3" {% if form_data and form_data.paplevel=="3" %}selected{% endif %}>
+                                        3-CCF-C</option>
+                                    <option value="4" {% if form_data and form_data.paplevel=="4" %}selected{% endif %}>
+                                        4-中文CCF-A</option>
+                                    <option value="5" {% if form_data and form_data.paplevel=="5" %}selected{% endif %}>
+                                        5-中文CCF-B</option>
+                                    <option value="6" {% if form_data and form_data.paplevel=="6" %}selected{% endif %}>
+                                        6-无级别</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-5 form-group">
+                            <div>
+                                论文类型: <select name="paptype" placeholder="输入论文类型">
+                                    <option value="1" {% if form_data and form_data.paptype=="1" %}selected{% endif %}>
+                                        1-full paper</option>
+                                    <option value="2" {% if form_data and form_data.paptype=="2" %}selected{% endif %}>
+                                        2-short paper</option>
+                                    <option value="3" {% if form_data and form_data.paptype=="3" %}selected{% endif %}>
+                                        3-poster paper</option>
+                                    <option value="4" {% if form_data and form_data.paptype=="4" %}selected{% endif %}>
+                                        4-demo paper</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="clear:both"></div>
+                    <div class="table-one-row">
+                        <div class="col-sm-5 form-group">
+                            <div>
+                                通讯作者:
+                                <select name="isau" placeholder="输入是否为通讯作者">
+                                    <option {% if form_data and form_data.isau=="是" %}selected{% endif %}>是</option>
+                                    <option {% if form_data and form_data.isau=="否" %}selected{% endif %}>否</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-5 flash-message">
+                            {% with messages = get_flashed_messages() %}
+                            {% if messages %}
+                            {% for message in messages %}
+                            {{ message }}
+                            {% endfor %}
+                            {% endif %}
+                            {% endwith %}
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary btn-input" type="submit" style="width: 10%;">提交</button>
+                    <div style="clear:both"></div>
+                </form>
+            </div>
+            <div class="out-table">
+                <div class="table-responsive">
+                    <table class="table">
+                        <tr>
+                            <th>教师工号</th>
+                            <th>教师</th>
+                            <th>论文序号</th>
+                            <th>论文</th>
+                            <th>排名</th>
+                            <th>是否通讯作者</th>
+                        </tr>
+                        {% for item in data_list %}
+                        <tr>
+                            <td>{{item.teid}}</td>
+                            <td>{{item.teacher}}</td>
+                            <td>{{item.paid}}</td>
+                            <td>{{item.paname}}</td>
+                            <td>{{item.rank}}</td>
+                            <td>{{item.isau}}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
