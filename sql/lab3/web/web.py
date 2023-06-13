@@ -39,9 +39,9 @@ def updatpost(num):
                         'isau': '是' if item[3] == True else '否'
                         })
     if num == 0:
-        return render_template('paper.html', data_list=anslist)
+        return render_template('paper.html', data_list=anslist, telist=teacherdata)
     else:
-        return render_template('paper.html', data_list=anslist, form_data=request.form)
+        return render_template('paper.html', data_list=anslist, form_data=request.form, telist=teacherdata)
 
 
 def updateproject(num):
@@ -65,9 +65,36 @@ def updateproject(num):
             'cost': item[3]
         })
     if num == 0:
-        return render_template('project.html', data_list=anslist)
+        return render_template('project.html', data_list=anslist, telist=teacherdata)
     else:
-        return render_template('project.html', data_list=anslist, form_data=request.form)
+        return render_template('project.html', data_list=anslist, form_data=request.form, telist=teacherdata)
+
+
+def updatecourse(num):
+    teacherlist = usesql('select * from teacher')
+    teacherdata = {}
+    for item in teacherlist:
+        teacherdata[item[0]] = item[1]
+    courselist = usesql('select * from Course')
+    coursedata = {}
+    for item in courselist:
+        coursedata[item[0]] = item[1]
+    anslist = []
+    teachlist = usesql('select * from TeachCourse')
+    for item in teachlist:
+        anslist.append({
+            'teid': item[0],
+            'teacher': teacherdata[item[0]],
+            'courseID': item[1],
+            'courseName': coursedata[item[1]],
+            'teachyear': item[2],
+            'teachterm': (lambda x:  {1: '春季学期', 2: '夏季学期', 3: '冬季学期'}[x])(item[3]),
+            'teachtime': item[4]
+        })
+    if num == 0:
+        return render_template('course.html', data_list=anslist, telist=teacherdata)
+    else:
+        return render_template('course.html', data_list=anslist, form_data=request.form, telist=teacherdata)
 
 
 @app.route("/login/", methods=['GET', 'POST'])
@@ -154,6 +181,11 @@ def paper():
     return updatpost(1)
 
 
+@app.route("/tmp/")
+def tmp():
+    return render_template("tmp.html")
+
+
 @app.route("/project/", methods=['GET', 'POST'])
 def project():
     if request.method == 'GET':
@@ -162,7 +194,7 @@ def project():
         if not user_info:
             return redirect("/login/")
         else:
-            return render_template('project.html')
+            return updateproject(0)
     if not request.form:
         session.pop('account')
         print('log out')
@@ -172,7 +204,7 @@ def project():
         for i in request.form:
             if request.form.get(i) == '':
                 flash('输入不能为空')
-                return updateproject(0)
+                return updateproject(1)
         proid = request.form.get('proid')
         proname = request.form.get('proname')
         profrom = request.form.get('profrom')
@@ -220,11 +252,49 @@ def course():
         if not user_info:
             return redirect("/login/")
         else:
-            return render_template('course.html')
+            return updatecourse(0)
     if not request.form:
         session.pop('account')
         print('log out')
         return redirect("/login/")
+    try:
+        print(request.form)
+        for i in request.form:
+            if request.form.get(i) == '':
+                flash('输入不能为空')
+                return updatecourse(0)
+        courseID = request.form.get("courseID")
+        teachyear = int(request.form.get("teachyear"))
+        teachterm = int(request.form.get("teachterm"))
+        inputnum = int(request.form.get("num"))
+        action = int(request.form.get("action"))
+        teid = []
+        tetime = []
+        for i in range(inputnum):
+            teid.append(request.form.get('teid'+str(i)))
+            tetime.append(int(request.form.get('tetime'+str(i))))
+    except:
+        flash('输入错误')
+        return updatecourse(1)
+    ret = usesql(f"select * from Course where CourseID = \'{courseID}\'")
+    if not ret:
+        flash("课程不存在！")
+        return updatecourse(1)
+    else:
+        total = int(ret[0][2])
+        if total != sum(tetime):
+            flash("学时分配错误！")
+            return updatecourse(1)
+        else:
+            if action == 1:
+                for i in range(inputnum):
+                    if not usesql(f"select TeacherName from teacher where TeacherNum = \'{teid[i]}\'"):
+                        flash(f"编号为{teid[i]}的教师不存在")
+                        return updateproject(1)
+                for i in range(inputnum):
+                    usesql(
+                        f"insert into TeachCourse value(\'{teid[i]}\',\'{courseID}\',{teachyear},{teachterm},{tetime[i]})")
+    return updatecourse(0)
 
 
 @app.route("/search/", methods=['GET', 'POST'])

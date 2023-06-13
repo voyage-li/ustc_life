@@ -3,11 +3,14 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>登记课程</title>
-    <link rel="stylesheet" href="/static/css/my.css">
+    <title>登记项目</title>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/v4-shims.css">
     <link rel="stylesheet" href="/static/plugins/bootstrap-3.4.1/css/bootstrap.css">
+    <link rel="stylesheet" href="/static/css/my.css">
+    <script>
+
+    </script>
 </head>
 
 <body>
@@ -33,8 +36,116 @@
                     class="btn btn-primary" type="submit">登出</button></form>
         </div>
         <div class="right-wrap">
-            <div class="welcome">
-                欢迎使用教学科研登记系统
+            <div class="inputforpaper">
+                <form method="post" action="/course/">
+                    <div class="table-one-row">
+                        <div class="col-sm-5 form-group">
+                            课程编号: <input type="text" name="courseID" placeholder="输入课程编号"
+                                value="{{form_data.courseID if form_data else ''}}">
+                        </div>
+                        <div class="col-sm-5 form-group">
+                            授课年份: <input type="number" name="teachyear" placeholder="输入授课年份"
+                                value="{{form_data.teachyear if form_data else ''}}">
+                        </div>
+                    </div>
+                    <div class="table-one-row">
+                        <div class="col-sm-5 form-group">
+                            授课学期: <select name="teachterm">
+                                <option value="1" {% if form_data and form_data.action=="1" %}selected{% endif %}>
+                                    1-春季学期</option>
+                                <option value="2" {% if form_data and form_data.action=="2" %}selected{% endif %}>
+                                    2-夏季学期 </option>
+                                <option value="3" {% if form_data and form_data.action=="3" %}selected{% endif %}>
+                                    3-秋季学期</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-5 form-group">
+                            授课人数: <input type="number" id="inputnum" name="num" onchange="updateinput()" min="0"
+                                placeholder="输入授课人数">
+                        </div>
+                    </div>
+                    <div class="table-one-row">
+                        <div class="col-sm-5 form-group">
+                            具体操作: <select name="action">
+                                <option value="1" {% if form_data and form_data.action=="1" %}selected{% endif %}>
+                                    1-增加数据</option>
+                                <option value="2" {% if form_data and form_data.action=="2" %}selected{% endif %}>
+                                    2-删除数据 </option>
+                                <option value="3" {% if form_data and form_data.action=="3" %}selected{% endif %}>
+                                    3-修改数据</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <script>
+                        function updateinput() {
+                            var num = document.getElementById("inputnum")
+                            var inputcontainer = document.getElementById("dynamic-input");
+                            inputcontainer.innerHTML = "";
+                            if (num.value == 0) {
+                                return;
+                            }
+                            for (var i = 0; i < num.value; i++) {
+                                var div = document.createElement("div");
+                                div.className = "col-md-5 form-group";
+                                div.textContent = "教师工号: ";
+                                var input = document.createElement("input");
+                                input.type = "text";
+                                input.name = "teid" + (i);
+                                input.placeholder = "输入教师工号";
+                                div.appendChild(input);
+                                inputcontainer.appendChild(div);
+                                var div = document.createElement("div");
+                                div.className = "col-md-5 form-group";
+                                div.textContent = "授课学时: ";
+                                var input = document.createElement("input");
+                                input.type = "number";
+                                input.name = "tetime" + (i);
+                                input.placeholder = "输入授课学时";
+                                div.appendChild(input);
+                                inputcontainer.appendChild(div);
+                            }
+                        }
+                    </script>
+                    <div id="dynamic-input" class="table-one-row dinamic-input"></div>
+                    <div class="col-sm-5 flash-message">
+                        {% with messages = get_flashed_messages() %}
+                        {% if messages %}
+                        {% for message in messages %}
+                        {{ message }}
+                        {% endfor %}
+                        {% endif %}
+                        {% endwith %}
+                    </div>
+                    <div style="clear:both"></div>
+                    <button class="btn btn-primary btn-input" type="submit" style="width: 10%;">提交</button>
+                </form>
+            </div>
+            <div class="out-table">
+                <div class="table-responsive">
+                    <table class="table">
+                        <tr>
+                            <th>教师工号</th>
+                            <th>教师</th>
+                            <th>课程号</th>
+                            <th>课程名</th>
+                            <th>授课年份</th>
+                            <th>授课学期</th>
+                            <th>授课学时</th>
+                        </tr>
+                        {% for item in data_list %}
+                        <tr>
+                            <td>{{item.teid}}</td>
+                            <td>{{item.teacher}}</td>
+                            <td>{{item.courseID}}</td>
+                            <td>{{item.courseName}}</td>
+                            <td>{{item.teachyear}}</td>
+                            <td>{{item.teachterm}}</td>
+                            <td>{{item.teachtime}}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
             </div>
         </div>
     </div>
