@@ -60,8 +60,8 @@
                             </select>
                         </div>
                         <div class="col-sm-5 form-group">
-                            授课人数: <input type="number" id="inputnum" name="num" onchange="updateinput()" min="0"
-                                placeholder="输入授课人数">
+                            授课人数: <input type="number" id="inputnum" name="num" onchange="updateinput()" min="1"
+                                value="1">
                         </div>
                     </div>
                     <div class="table-one-row">
@@ -78,36 +78,65 @@
                     </div>
                     <div style="clear:both;"></div>
                     <script>
+                        oldvalue = 0;
                         function updateinput() {
                             var num = document.getElementById("inputnum")
                             var inputcontainer = document.getElementById("dynamic-input");
-                            inputcontainer.innerHTML = "";
                             if (num.value == 0) {
                                 return;
                             }
-                            for (var i = 0; i < num.value; i++) {
+                            if (Number(oldvalue) > num.value) {
+                                var child = inputcontainer.children;
+                                for (var i = Number(oldvalue); i > num.value; i--) {
+                                    inputcontainer.removeChild(child[i - 1]);
+                                }
+                            }
+                            for (var i = Number(oldvalue); i != 0 && i < num.value; i++) {
+                                var totaldiv = document.createElement("div");
+
                                 var div = document.createElement("div");
-                                div.className = "col-md-5 form-group";
-                                div.textContent = "教师工号: ";
-                                var input = document.createElement("input");
-                                input.type = "text";
+                                div.className = "col-md-3 form-group";
+                                div.style = "font-size: 19px;"
+                                var input = document.createElement("select");
+                                input.innerHTML = "{% for teid in telist %}<option value=\"{{teid}}\">{{teid}}-{{telist[teid]}}</option>{%endfor%}"
                                 input.name = "teid" + (i);
-                                input.placeholder = "输入教师工号";
+                                input.style = "width:200px;text-align:center;";
                                 div.appendChild(input);
-                                inputcontainer.appendChild(div);
+                                totaldiv.appendChild(div);
+
                                 var div = document.createElement("div");
-                                div.className = "col-md-5 form-group";
-                                div.textContent = "授课学时: ";
+                                div.className = "col-md-3 form-group";
                                 var input = document.createElement("input");
                                 input.type = "number";
                                 input.name = "tetime" + (i);
                                 input.placeholder = "输入授课学时";
                                 div.appendChild(input);
-                                inputcontainer.appendChild(div);
+                                totaldiv.appendChild(div);
+
+                                var div = document.createElement("div");
+                                div.style = "clear:both";
+                                totaldiv.append(div);
+
+                                inputcontainer.appendChild(totaldiv);
                             }
+                            oldvalue = num.value;
                         }
+                        updateinput()
                     </script>
-                    <div id="dynamic-input" class="table-one-row dinamic-input"></div>
+                    <div id="dynamic-input" class="table-one-row dinamic-input">
+                        <div>
+                            <div class="col-md-3 form-group" style="font-size: 19px;">
+                                <select name="teid0" style=" width:200px;text-align:center;">
+                                    {% for teid in telist %}
+                                    <option value="{{teid}}">{{teid}}-{{telist[teid]}}</option>
+                                    {% endfor%}
+                                </select>
+                            </div>
+                            <div class="col-md-3 form-group"><input type="number" name="tetime1" placeholder="输入授课学时">
+                            </div>
+                            <div style="clear: both;"></div>
+                        </div>
+                    </div>
                     <div class="col-sm-5 flash-message">
                         {% with messages = get_flashed_messages() %}
                         {% if messages %}

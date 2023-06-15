@@ -154,36 +154,49 @@ def paper():
         paplevel = int(request.form.get('paplevel'))
         rank = int(request.form.get('rank'))
         isau = True if request.form.get('isau') == '是' else False
+        action = int(request.form.get('action'))
     except:
         flash('输入错误!')
         return updatpost(1)
-    if not usesql(f"select * from teacher where TeacherNum = \'{techid}\'"):
-        flash('教师不存在！')
-    elif usesql(f"select * from Paper where PaperID = {papid}"):
-        if usesql(f"select * from PostPaper where PaperID = {papid} and IsAuthor = True") and isau == True:
-            flash('论文不能有两个通讯作者！')
-        elif usesql(f"select * from PostPaper where PaperID = {papid} and PostRank = {rank}"):
-            flash('论文的排名不能重复！')
-        elif usesql(f"select * from PostPaper where PaperID = {papid} and TeacherNum =\'{techid}\'"):
-            flash('不能重复添加！')
+    if action == 1:
+        if not usesql(f"select * from teacher where TeacherNum = \'{techid}\'"):
+            flash('教师不存在！')
+        elif usesql(f"select * from Paper where PaperID = {papid}"):
+            if usesql(f"select * from PostPaper where PaperID = {papid} and IsAuthor = True") and isau == True:
+                flash('论文不能有两个通讯作者！')
+            elif usesql(f"select * from PostPaper where PaperID = {papid} and PostRank = {rank}"):
+                flash('论文的排名不能重复！')
+            elif usesql(f"select * from PostPaper where PaperID = {papid} and TeacherNum =\'{techid}\'"):
+                flash('不能重复添加！')
+            else:
+                usesql(
+                    f"insert into PostPaper value(\'{techid}\',{papid},{rank},{isau})")
+                flash('添加成功！')
+                return updatpost(0)
         else:
+            usesql(
+                f"insert into Paper value({papid},\'{papname}\',\'{papsource}\',\'{papyear}\',{paptype},{paplevel})")
             usesql(
                 f"insert into PostPaper value(\'{techid}\',{papid},{rank},{isau})")
             flash('添加成功！')
             return updatpost(0)
-    else:
+    elif action == 2:
+        if not usesql(f"select * from Paper where PaperID = {papid}"):
+            flash('论文不存在')
+            return updatpost(1)
+        usesql(f"delete from PostPaper where PaperID = {papid}")
+        usesql(f"delete from Paper where PaperID = {papid}")
+        flash("删除成功！")
+        return updatpost(0)
+    elif action == 3:
+        if not usesql(f"select * from Paper where PaperID = {papid}"):
+            flash('论文不存在')
+            return updatpost(1)
         usesql(
-            f"insert into Paper value({papid},\'{papname}\',\'{papsource}\',\'{papyear}\',{paptype},{paplevel})")
-        usesql(
-            f"insert into PostPaper value(\'{techid}\',{papid},{rank},{isau})")
-        flash('添加成功！')
+            f"update Paper set PaperName=\'{papname}\',PaperFrom=\'{papsource}\',PaperYear=\'{papyear}\',PaperType={paptype},PaperLevel={paplevel} where PaperID={papid}")
+        flash("成功修改论文,修改则先删除数据再重新添加")
         return updatpost(0)
     return updatpost(1)
-
-
-@app.route("/tmp/")
-def tmp():
-    return render_template("tmp.html")
 
 
 @app.route("/project/", methods=['GET', 'POST'])
@@ -213,6 +226,7 @@ def project():
         endyear = str(request.form.get('endyear'))+'-0-0'
         protype = int(request.form.get('protype'))
         num = int(request.form.get('total'))
+        action = int(request.form.get('action'))
         teid = []
         terank = []
         tecost = []
@@ -223,23 +237,43 @@ def project():
     except:
         flash('输入错误')
         return updateproject(1)
-    if procost != sum(tecost):
-        flash('经费统计出现错误！')
-    elif len(terank) != len(set(terank)):
-        flash('排名出现重复！')
-    else:
-        if usesql(f"select * from Project where ProjectID = \'{proid}\'"):
-            flash(f"项目编号已经存在")
+    if action == 1:
+        if procost != sum(tecost):
+            flash('经费统计出现错误！')
+        elif len(terank) != len(set(terank)):
+            flash('排名出现重复！')
+        else:
+            if usesql(f"select * from Project where ProjectID = \'{proid}\'"):
+                flash(f"项目编号已经存在")
+                return updateproject(1)
+            usesql(
+                f"insert into Project value(\'{proid}\',\'{proname}\',\'{profrom}\',{protype},{procost},{beginyear},{endyear})")
+            for i in range(num):
+                if not usesql(f"select TeacherName from teacher where TeacherNum = \'{teid[i]}\'"):
+                    flash(f"编号为{teid[i]}的教师不存在")
+                    return updateproject(1)
+            for i in range(num):
+                usesql(
+                    f"insert into HaveProject value(\'{teid[i]}\',\'{proid}\',{terank[i]},{tecost[i]})")
+            return updateproject(0)
+    elif action == 2:
+        if not usesql(f"select * from Project where ProjectID = \'{proid}\'"):
+            flash('项目不存在')
+            return updateproject(1)
+        usesql(f"delete from HaveProject where ProjectID = \'{proid}\'")
+        usesql(f"delete from Project where ProjectID = \'{proid}\'")
+        flash("删除成功！")
+        return updateproject(0)
+    elif action == 3:
+        if not usesql(f"select * from Project where ProjectID = \'{proid}\'"):
+            flash('项目不存在')
+            return updateproject(1)
+        if not usesql(f"select * from Project where ProjectID = \'{proid}\' and ProjectCost = {procost}"):
+            flash('不能修改项目总经费')
             return updateproject(1)
         usesql(
-            f"insert into Project value(\'{proid}\',\'{proname}\',\'{profrom}\',{protype},{procost},{beginyear},{endyear})")
-        for i in range(num):
-            if not usesql(f"select TeacherName from teacher where TeacherNum = \'{teid[i]}\'"):
-                flash(f"编号为{teid[i]}的教师不存在")
-                return updateproject(1)
-        for i in range(num):
-            usesql(
-                f"insert into HaveProject value(\'{teid[i]}\',\'{proid}\',{terank[i]},{tecost[i]})")
+            f"update Project set ProjectName=\'{proname}\',ProjectFrom=\'{profrom}\',ProjectType={protype},ProjectCost={procost},ProjectBegin = {beginyear},ProjectEnd = {endyear} where ProjectID=\'{proid}\'")
+        flash("成功修改项目,修改则先删除数据再重新添加")
         return updateproject(0)
     return updateproject(1)
 
