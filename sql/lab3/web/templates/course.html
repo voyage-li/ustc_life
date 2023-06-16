@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>登记项目</title>
+    <title>登记课程</title>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/v4-shims.css">
     <link rel="stylesheet" href="/static/plugins/bootstrap-3.4.1/css/bootstrap.css">
@@ -40,8 +40,11 @@
                 <form method="post" action="/course/">
                     <div class="table-one-row">
                         <div class="col-sm-5 form-group">
-                            课程编号: <input type="text" name="courseID" placeholder="输入课程编号"
-                                value="{{form_data.courseID if form_data else ''}}">
+                            课程信息: <select name="courseID" style="width:auto;font-size: 19px;">
+                                {% for coid in colist %}
+                                <option value="{{coid}}">{{coid}}-{{colist[coid][0]}}-{{colist[coid][1]}}学时</option>
+                                {% endfor%}
+                            </select>
                         </div>
                         <div class="col-sm-5 form-group">
                             授课年份: <input type="number" name="teachyear" placeholder="输入授课年份"
@@ -132,7 +135,7 @@
                                     {% endfor%}
                                 </select>
                             </div>
-                            <div class="col-md-3 form-group"><input type="number" name="tetime1" placeholder="输入授课学时">
+                            <div class="col-md-3 form-group"><input type="number" name="tetime0" placeholder="输入授课学时">
                             </div>
                             <div style="clear: both;"></div>
                         </div>

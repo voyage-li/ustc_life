@@ -78,7 +78,7 @@ def updatecourse(num):
     courselist = usesql('select * from Course')
     coursedata = {}
     for item in courselist:
-        coursedata[item[0]] = item[1]
+        coursedata[item[0]] = (item[1], item[2])
     anslist = []
     teachlist = usesql('select * from TeachCourse')
     for item in teachlist:
@@ -86,15 +86,27 @@ def updatecourse(num):
             'teid': item[0],
             'teacher': teacherdata[item[0]],
             'courseID': item[1],
-            'courseName': coursedata[item[1]],
+            'courseName': coursedata[item[1]][0],
             'teachyear': item[2],
             'teachterm': (lambda x:  {1: '春季学期', 2: '夏季学期', 3: '冬季学期'}[x])(item[3]),
             'teachtime': item[4]
         })
     if num == 0:
-        return render_template('course.html', data_list=anslist, telist=teacherdata)
+        return render_template('course.html', data_list=anslist, telist=teacherdata, colist=coursedata)
     else:
-        return render_template('course.html', data_list=anslist, form_data=request.form, telist=teacherdata)
+        return render_template('course.html', data_list=anslist, form_data=request.form, telist=teacherdata, colist=coursedata)
+
+
+def updatesearch(num, ansstr, outstr):
+    teacherlist = usesql('select * from teacher')
+    teacherdata = {}
+    for item in teacherlist:
+        teacherdata[item[0]] = item[1]
+    print(ansstr)
+    if num == 0:
+        return render_template('search.html', telist=teacherdata, ansstr=ansstr, outstr=outstr)
+    else:
+        return render_template('search.html', form_data=request.form, telist=teacherdata)
 
 
 @app.route("/login/", methods=['GET', 'POST'])
@@ -222,8 +234,8 @@ def project():
         proname = request.form.get('proname')
         profrom = request.form.get('profrom')
         procost = float(request.form.get('procost'))
-        beginyear = str(request.form.get('beginyear'))+'-0-0'
-        endyear = str(request.form.get('endyear'))+'-0-0'
+        beginyear = int(request.form.get('beginyear'))
+        endyear = int(request.form.get('endyear'))
         protype = int(request.form.get('protype'))
         num = int(request.form.get('total'))
         action = int(request.form.get('action'))
@@ -296,7 +308,7 @@ def course():
         for i in request.form:
             if request.form.get(i) == '':
                 flash('输入不能为空')
-                return updatecourse(0)
+                return updatecourse(1)
         courseID = request.form.get("courseID")
         teachyear = int(request.form.get("teachyear"))
         teachterm = int(request.form.get("teachterm"))
@@ -310,25 +322,36 @@ def course():
     except:
         flash('输入错误')
         return updatecourse(1)
-    ret = usesql(f"select * from Course where CourseID = \'{courseID}\'")
-    if not ret:
-        flash("课程不存在！")
-        return updatecourse(1)
-    else:
-        total = int(ret[0][2])
-        if total != sum(tetime):
-            flash("学时分配错误！")
+    if action == 1:
+        ret = usesql(f"select * from Course where CourseID = \'{courseID}\'")
+        if not ret:
+            flash("课程不存在！")
             return updatecourse(1)
         else:
-            if action == 1:
-                for i in range(inputnum):
-                    if not usesql(f"select TeacherName from teacher where TeacherNum = \'{teid[i]}\'"):
-                        flash(f"编号为{teid[i]}的教师不存在")
-                        return updateproject(1)
+            total = int(ret[0][2])
+            if usesql(f"select * from TeachCourse where CourseID = \'{courseID}\' and TeachYear = {teachyear} and TeachTerm = {teachterm}"):
+                flash("课程已安排!")
+                return updatecourse(1)
+            elif total != sum(tetime):
+                flash("学时分配错误！")
+                return updatecourse(1)
+            else:
                 for i in range(inputnum):
                     usesql(
                         f"insert into TeachCourse value(\'{teid[i]}\',\'{courseID}\',{teachyear},{teachterm},{tetime[i]})")
-    return updatecourse(0)
+                return updatecourse(0)
+    elif action == 2:
+        if not usesql(f"select * from TeachCourse where CourseID = \'{courseID}\' and TeachYear = {teachyear} and TeachTerm = {teachterm}"):
+            flash("该时间段课程尚未安排,无需删除!")
+            return updatecourse(1)
+        usesql(
+            f"delete from TeachCourse where CourseID = \'{courseID}\' and TeachYear = {teachyear} and TeachTerm = {teachterm}")
+        flash('成功删除')
+        return updatecourse(0)
+    elif action == 3:
+        flash("修改请先删除再添加")
+        return updatecourse(1)
+    return updatecourse(1)
 
 
 @app.route("/search/", methods=['GET', 'POST'])
@@ -339,11 +362,104 @@ def search():
         if not user_info:
             return redirect("/login/")
         else:
-            return render_template('search.html')
+            return updatesearch(0, '### 请在上方输入查询需求', 'none')
     if not request.form:
         session.pop('account')
         print('log out')
         return redirect("/login/")
+    try:
+        print(request.form)
+        teid = request.form.get("techid")
+        beginyear = int(request.form.get("beginyear"))
+        endyear = int(request.form.get("endyear"))
+    except:
+        flash("输入错误!")
+        return updatesearch(1, '', 'none')
+    ansstr = "## 教师教学科研工作统计"
+    ansstr += "(" + str(beginyear) + "~" + str(endyear) + r")\n"
+    ansstr += r"#### 教师基本信息\n"
+    teinfo = usesql(f"select * from teacher where TeacherNum = \'{teid}\'")
+    tename = teinfo[0][1]
+    tesex = '男' if teinfo[0][2] == 1 else '女'
+    tejob = (lambda x: {
+        1: "博士后",
+        2: "助教",
+        3: "讲师",
+        4: "副教授",
+        5: "特任教授",
+        6: "教授",
+        7: "助理研究员",
+        8: "特任副研究员",
+        9: "副研究员",
+        10: "特任研究员",
+        11: "研究员"
+    }[x])(teinfo[0][3])
+    ansstr += f"工号:{teid}⠀⠀⠀⠀⠀⠀⠀⠀姓名:{tename}⠀⠀⠀⠀⠀⠀⠀⠀性别:{tesex}⠀⠀⠀⠀⠀⠀⠀⠀职称:{tejob}"+r"\n"
+    outstr = tename+str(beginyear)+"-"+str(endyear)
+    ansstr += r"#### 教学情况\n"
+    couinfo = usesql(
+        f"select Course.CourseID,Course.CourseName,TeachCourse.TeachTime,TeachCourse.TeachYear,TeachCourse.TeachTerm from TeachCourse,Course where TeachCourse.CourseID = Course.CourseID and TeachCourse.TeacherNum = \'{teid}\'")
+    print(couinfo)
+    for item in couinfo:
+        coid = item[0]
+        coname = item[1]
+        tetime = item[2]
+        teyear = item[3]
+        teterm = (lambda x: {1: '春', 2: '夏', 3: '秋'}[x])(item[4])
+        if teyear <= endyear and teyear >= beginyear:
+            ansstr += f"课程号:{coid}⠀⠀⠀⠀⠀⠀⠀⠀课程名:{coname}⠀⠀⠀⠀⠀⠀⠀⠀主讲学时:{tetime}⠀⠀⠀⠀⠀⠀⠀⠀学期:{teyear} {teterm}"+r"\n\n"
+    ansstr += r"#### 发表论文情况\n"
+    paperinfo = usesql(
+        f"select Paper.PaperName,Paper.PaperFrom,SUBSTRING_INDEX(Paper.PaperYear, '-', 1),Paper.PaperType,PostPaper.PostRank,PostPaper.IsAuthor from Paper,PostPaper where Paper.PaperID = PostPaper.PaperID and PostPaper.TeacherNum = \'{teid}\'")
+    print(paperinfo)
+    ii = 0
+    for item in paperinfo:
+        papname = item[0]
+        papfrom = item[1]
+        papyear = item[2]
+        paplevel = (lambda x: {
+            1: 'CCF-A',
+            2: 'CCF-B',
+            3: 'CCF-C',
+            4: '中文 CCF-A',
+            5: '中文 CCF-B',
+            6: '无级别'
+        }[x])(item[3])
+        paprank = item[4]
+        papis = '通讯作者' if item[4] == True else ''
+        ii += 1
+        if int(papyear) <= endyear and int(papyear) >= beginyear:
+            ansstr += str(ii) + \
+                f". {papname},⠀{papfrom},⠀{papyear},⠀{paplevel},⠀排名:{paprank},⠀{papis}"+r"\n"
+    ansstr += r"#### 承担项目情况\n"
+    proinfo = usesql(
+        f"select Project.ProjectName,Project.ProjectFrom,Project.ProjectType,Project.ProjectBegin,Project.ProjectEnd,Project.ProjectCost,HaveProject.HaveCost from Project,HaveProject where Project.ProjectID = HaveProject.ProjectID and HaveProject.TeacherNum =  \'{teid}\'")
+    ii = 0
+    print(proinfo)
+    for item in proinfo:
+        ii += 1
+        proname = item[0]
+        profrom = item[1]
+        protype = (lambda x: {
+            1: '国家级项目',
+            2: '省部级项目',
+            3: '市厅级项目',
+            4: '企业合作项目',
+            5: '其它类型项目'
+        }[x])(item[2])
+        probegin = item[3]
+        proend = item[4]
+        totalcost = item[5]
+        percost = item[6]
+        if probegin < endyear and proend > beginyear:
+            ansstr += str(ii) + \
+                f". {proname}, {profrom}, {protype}, {probegin}-{proend}, 总经费:{totalcost}, 承担经费:{percost}"+r"\n"
+    return updatesearch(0, ansstr, outstr)
+
+
+@app.route("/tmp/", methods=['GET', 'POST'])
+def tmp():
+    return render_template("tmp.html")
 
 
 if __name__ == "__main__":

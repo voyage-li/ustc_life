@@ -89,26 +89,10 @@ div {
     padding-top: 1%;
     height: auto;
     max-height: 200px;
-    overflow: scroll; 
+    overflow-y: scroll; 
     border-radius: 5px;
 }
 
-.inputforpaper::-webkit-scrollbar {
-  /*滚动条整体样式*/
-  width: 10px;
-  /*高宽分别对应横竖滚动条的尺寸*/
-  height: 10px;
-  display: none;
-}
- 
-.inputforpaper::-webkit-scrollbar-thumb {
-  border-radius: 5px;
-  background: #cecece;
-}
- 
-.inputforpaper::-webkit-scrollbar-track {
-  background: #fff;
-}
 
 .out-table{
     margin-left: 5%;
@@ -140,4 +124,17 @@ td,th{
 
 .sameline{
     float: left;
+}
+
+
+.out-pdf{
+    margin-left: 5%;
+    margin-right: 10%;
+    background-color: #eef1f5;
+    width: 90%;
+    height: 70%;
+    border: 2px solid rgb(75, 1, 1);
+    border-radius: 5px;
+    padding-left: 20px;
+    padding-right: 20px;
 }
