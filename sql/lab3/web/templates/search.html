@@ -40,7 +40,7 @@
                     <div class="table-one-row">
                         <div class="col-sm-5 form-group">
                             教师工号:
-                            <select name="techid" style=" width:190px;font-size: 19px;">
+                            <select name="teid" style=" width:190px;font-size: 19px;">
                                 {% for teid in telist %}
                                 <option value="{{teid}}">{{teid}}-{{telist[teid]}}</option>
                                 {% endfor%}
@@ -60,11 +60,11 @@
                     <div class="table-one-row">
                         <div class="col-sm-5 form-group">
                             开始年份: <input type="number" name="beginyear" placeholder="输入开始年份"
-                                value="{{form_data.beginyear if form_data else ''}}">
+                                value="{{form_data.beginyear if form_data else ''}}" min='1'>
                         </div>
                         <div class="col-sm-5 form-group">
                             结束年份: <input type="number" name="endyear" placeholder="输入结束年份"
-                                value="{{form_data.endyear if form_data else ''}}">
+                                value="{{form_data.endyear if form_data else ''}}" min='1'>
                         </div>
                     </div>
                     <div style="clear:both"></div>

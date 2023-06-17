@@ -48,7 +48,7 @@
                         </div>
                         <div class="col-sm-5 form-group">
                             授课年份: <input type="number" name="teachyear" placeholder="输入授课年份"
-                                value="{{form_data.teachyear if form_data else ''}}">
+                                value="{{form_data.teachyear if form_data else ''}}" min="1">
                         </div>
                     </div>
                     <div class="table-one-row">
@@ -76,6 +76,8 @@
                                     2-删除数据 </option>
                                 <option value="3" {% if form_data and form_data.action=="3" %}selected{% endif %}>
                                     3-修改数据</option>
+                                <option value="4" {% if form_data and form_data.action=="4" %}selected{% endif %}>
+                                    4-查询数据</option>
                             </select>
                         </div>
                     </div>

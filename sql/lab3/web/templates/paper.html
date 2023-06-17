@@ -38,50 +38,22 @@
                 <form method="post" action="/paper/">
                     <div class="table-one-row">
                         <div class="col-sm-5 form-group">
-                            <div>
-                                教师工号:
-                                <select name="techid" style=" width:190px;font-size: 19px;">
-                                    {% for teid in telist %}
-                                    <option value="{{teid}}">{{teid}}-{{telist[teid]}}</option>
-                                    {% endfor%}
-                                </select>
-                            </div>
+                            论文序号: <input type="number" name="papid" placeholder="输入论文序号"
+                                value="{{form_data.papid if form_data else '1'}}">
                         </div>
                         <div class="col-sm-5 form-group">
-                            <div>
-                                论文序号: <input type="number" name="papid" placeholder="输入论文序号"
-                                    value="{{form_data.papid if form_data else '0'}}">
-                            </div>
+                            论文名称: <input type="text" name="papname" placeholder="输入论文名称"
+                                value="{{form_data.papname if form_data else ''}}">
                         </div>
                     </div>
                     <div class="table-one-row">
-
                         <div class="col-sm-5 form-group">
-                            <div>
-                                论文名称: <input type="text" name="papname" placeholder="输入论文名称"
-                                    value="{{form_data.papname if form_data else ''}}">
-                            </div>
+                            论文发表: <input type="text" name="papsource" placeholder="输入发表源"
+                                value="{{form_data.papsource if form_data else ''}}">
                         </div>
                         <div class="col-sm-5 form-group">
-                            <div>
-                                论文发表: <input type="text" name="papsource" placeholder="输入发表源"
-                                    value="{{form_data.papsource if form_data else ''}}">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="table-one-row">
-
-                        <div class="col-sm-5 form-group">
-                            <div>
-                                发表年份: <input type="number" name="papyear" placeholder="输入发表年份"
-                                    value="{{form_data.papyear if form_data else '0'}}">
-                            </div>
-                        </div>
-                        <div class="col-sm-5 form-group">
-                            <div>
-                                论文排名: <input type="number" name="rank" placeholder="输入论文排名"
-                                    value="{{form_data.rank if form_data else '0'}}">
-                            </div>
+                            发表年份: <input type="number" name="papyear" placeholder="输入发表年份"
+                                value="{{form_data.papyear if form_data else ''}}" min='1'>
                         </div>
                     </div>
                     <div class="table-one-row">
@@ -119,17 +91,7 @@
                             </div>
                         </div>
                     </div>
-                    <div style="clear:both"></div>
                     <div class="table-one-row">
-                        <div class="col-sm-5 form-group">
-                            <div>
-                                通讯作者:
-                                <select name="isau" style=" width:190px;font-size: 19px;">
-                                    <option {% if form_data and form_data.isau=="是" %}selected{% endif %}>是</option>
-                                    <option {% if form_data and form_data.isau=="否" %}selected{% endif %}>否</option>
-                                </select>
-                            </div>
-                        </div>
                         <div class="col-sm-5 form-group">
                             具体操作: <select name="action" style=" width:190px;font-size: 19px;">
                                 <option value="1" {% if form_data and form_data.action=="1" %}selected{% endif %}>
@@ -138,10 +100,15 @@
                                     2-删除数据 </option>
                                 <option value="3" {% if form_data and form_data.action=="3" %}selected{% endif %}>
                                     3-修改数据</option>
+                                <option value="4" {% if form_data and form_data.action=="4" %}selected{% endif %}>
+                                    4-查询数据</option>
                             </select>
                         </div>
+                        <div class="col-sm-5 form-group">
+                            作者数量: <input type="number" id="inputnum" name="num" onchange="updateinput()" min="1"
+                                value="1">
+                        </div>
                     </div>
-                    <div style="clear:both"></div>
                     <div class="col-sm-5 flash-message">
                         {% with messages = get_flashed_messages() %}
                         {% if messages %}
@@ -151,6 +118,109 @@
                         {% endif %}
                         {% endwith %}
                     </div>
+                    <div style="clear:both"></div>
+                    <div id="dynamic-input" class="table-one-row dinamic-input">
+                        <div>
+                            <div class="col-sm-3 form-group" style="font-size: 19px;">
+                                <select name="teid0" style=" width:200px;text-align:center;">
+                                    {% for teid in telist %}
+                                    <option value="{{teid}}">{{teid}}-{{telist[teid]}}</option>
+                                    {% endfor%}
+                                </select>
+                            </div>
+                            <div class="col-sm-3 form-group"><input type="number" name="terank0" placeholder="输入论文排名">
+                            </div>
+                            <div class="col-sm-5 form-group">
+                                通讯作者:
+                                <select name="isau0" style=" width:190px;font-size: 19px;">
+                                    <option>是</option>
+                                    <option>否</option>
+                                </select>
+                            </div>
+                            <div style="clear:both"></div>
+                        </div>
+                    </div>
+                    <script>
+                        oldvalue = 0;
+                        function updateinput() {
+                            var num = document.getElementById("inputnum")
+                            var inputcontainer = document.getElementById("dynamic-input");
+                            if (num.value == 0) {
+                                return;
+                            }
+                            if (Number(oldvalue) > num.value) {
+                                var child = inputcontainer.children;
+                                for (var i = Number(oldvalue); i > num.value; i--) {
+                                    inputcontainer.removeChild(child[i - 1]);
+                                }
+                            }
+                            for (var i = Number(oldvalue); i != 0 && i < num.value; i++) {
+                                var totaldiv = document.createElement("div");
+                                var div = document.createElement("div");
+                                div.className = "col-sm-3 form-group";
+                                div.style = "font-size: 19px;"
+                                var input = document.createElement("select");
+                                input.innerHTML = "{% for teid in telist %}<option value=\"{{teid}}\">{{teid}}-{{telist[teid]}}</option>{%endfor%}"
+                                input.name = "teid" + (i);
+                                input.placeholder = "输入教师工号";
+                                input.style = "width:200px;text-align:center;";
+                                div.appendChild(input);
+                                totaldiv.appendChild(div);
+
+                                var div = document.createElement("div");
+                                div.className = "col-sm-3 form-group";
+                                var input = document.createElement("input");
+                                input.type = "number";
+                                input.name = "terank" + (i);
+                                input.placeholder = "输入论文排名";
+                                div.appendChild(input);
+                                totaldiv.appendChild(div);
+
+                                var div = document.createElement("div");
+                                div.className = "col-sm-5 form-group";
+                                div.innerHTML = "通讯作者: "
+                                var input = document.createElement("select");
+                                input.innerHTML = "<option>是</option><option>否</option>"
+                                input.name = "isau" + (i);
+                                input.style = "width:190px;font-size: 19px;";
+                                div.appendChild(input);
+                                totaldiv.appendChild(div);
+
+                                var div = document.createElement("div");
+                                div.style = "clear:both";
+                                totaldiv.append(div);
+
+                                inputcontainer.appendChild(totaldiv);
+                            }
+                            oldvalue = num.value;
+                        }
+                        updateinput();
+                    </script>
+                    <!-- <div class="table-one-row">
+                        <div class="col-sm-5 form-group">
+                            教师工号:
+                            <select name="techid" style=" width:190px;font-size: 19px;">
+                                {% for teid in telist %}
+                                <option value="{{teid}}">{{teid}}-{{telist[teid]}}</option>
+                                {% endfor%}
+                            </select>
+                        </div>
+
+                        <div class="col-sm-5 form-group">
+                            论文排名: <input type="number" name="rank" placeholder="输入论文排名"
+                                value="{{form_data.rank if form_data else '0'}}">
+                        </div>
+                        <div class="col-sm-5 form-group">
+                            通讯作者:
+                            <select name="isau" style=" width:190px;font-size: 19px;">
+                                <option {% if form_data and form_data.isau=="是" %}selected{% endif %}>是</option>
+                                <option {% if form_data and form_data.isau=="否" %}selected{% endif %}>否</option>
+                            </select>
+                        </div>
+                    </div> -->
+
+
+
                     <button class="btn btn-primary btn-input" type="submit" style="width: 10%;">提交</button>
                     <div style="clear:both"></div>
                 </form>

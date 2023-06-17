@@ -6,6 +6,13 @@ app = Flask(__name__)
 app.secret_key = "Hello world"
 
 
+def calint(string):
+    if not string:
+        return '0'
+    else:
+        return string
+
+
 def usesql(sentence):
     db = pymysql.connect(host='localhost', user='root',
                          passwd='voyage', database='lab3')
@@ -19,7 +26,7 @@ def usesql(sentence):
     return tmp
 
 
-def updatpost(num):
+def updatepost(num):
     teacherlist = usesql('select * from teacher')
     teacherdata = {}
     for item in teacherlist:
@@ -31,6 +38,8 @@ def updatpost(num):
     postlist = usesql('select * from PostPaper')
     anslist = []
     for item in postlist:
+        if num == 2 and item[1] != int(calint(request.form.get('papid'))):
+            continue
         anslist.append({'teid': item[0],
                         'teacher': teacherdata[item[0]],
                         'paid': item[1],
@@ -38,7 +47,7 @@ def updatpost(num):
                         'rank': item[2],
                         'isau': '是' if item[3] == True else '否'
                         })
-    if num == 0:
+    if num == 0 or num == 2:
         return render_template('paper.html', data_list=anslist, telist=teacherdata)
     else:
         return render_template('paper.html', data_list=anslist, form_data=request.form, telist=teacherdata)
@@ -56,6 +65,8 @@ def updateproject(num):
     anslist = []
     havelist = usesql('select * from HaveProject')
     for item in havelist:
+        if num == 2 and item[1] != request.form.get('proid').replace("\'", "\\'"):
+            continue
         anslist.append({
             'teid': item[0],
             'teacher': teacherdata[item[0]],
@@ -64,7 +75,7 @@ def updateproject(num):
             'rank': item[2],
             'cost': item[3]
         })
-    if num == 0:
+    if num == 0 or num == 2:
         return render_template('project.html', data_list=anslist, telist=teacherdata)
     else:
         return render_template('project.html', data_list=anslist, form_data=request.form, telist=teacherdata)
@@ -82,6 +93,8 @@ def updatecourse(num):
     anslist = []
     teachlist = usesql('select * from TeachCourse')
     for item in teachlist:
+        if num == 2 and item[1] != request.form.get('courseID').replace("\'", "\\'"):
+            continue
         anslist.append({
             'teid': item[0],
             'teacher': teacherdata[item[0]],
@@ -91,7 +104,7 @@ def updatecourse(num):
             'teachterm': (lambda x:  {1: '春季学期', 2: '夏季学期', 3: '冬季学期'}[x])(item[3]),
             'teachtime': item[4]
         })
-    if num == 0:
+    if num == 0 or num == 2:
         return render_template('course.html', data_list=anslist, telist=teacherdata, colist=coursedata)
     else:
         return render_template('course.html', data_list=anslist, form_data=request.form, telist=teacherdata, colist=coursedata)
@@ -115,8 +128,8 @@ def login():
         return redirect("/")
     if request.method == 'GET':
         return render_template('login.html')
-    acceptid = request.form.get('account')
-    acceptpwd = request.form.get('pwd')
+    acceptid = request.form.get('account').replace("\'", "\\'")
+    acceptpwd = request.form.get('pwd').replace("\'", "\\'")
     print(acceptid, acceptpwd)
     if acceptid == 'lyh_0921@mail.ustc.edu.cn' and acceptpwd == '123456':
         session['account'] = acceptid
@@ -151,64 +164,70 @@ def paper():
         if not user_info:
             return redirect("/login/")
         else:
-            return updatpost(0)
+            return updatepost(0)
     if not request.form:
         session.pop('account')
         print('log out')
         return redirect("/login/")
     try:
-        techid = request.form.get('techid')
-        papid = int(request.form.get('papid'))
-        papname = request.form.get('papname')
-        papsource = request.form.get('papsource')
+        print(request.form)
+        papid = int(calint(request.form.get('papid')))
+        papname = request.form.get('papname').replace("\'", "\\'")
+        papsource = request.form.get('papsource').replace("\'", "\\'")
         papyear = str(request.form.get('papyear'))+'-0-0'
-        paptype = int(request.form.get('paptype'))
-        paplevel = int(request.form.get('paplevel'))
-        rank = int(request.form.get('rank'))
-        isau = True if request.form.get('isau') == '是' else False
-        action = int(request.form.get('action'))
+        paptype = int(calint(request.form.get('paptype')))
+        paplevel = int(calint(request.form.get('paplevel')))
+        inputnum = int(calint(request.form.get("num")))
+        teid = []
+        rank = []
+        isau = []
+        for i in range(inputnum):
+            teid.append(request.form.get('teid'+str(i)))
+            rank.append(int(calint(request.form.get('terank'+str(i)))))
+            isau.append(True if request.form.get(
+                'isau'+str(i)) == '是' else False)
+        action = int(calint(request.form.get('action')))
     except:
         flash('输入错误!')
-        return updatpost(1)
+        return updatepost(1)
     if action == 1:
-        if not usesql(f"select * from teacher where TeacherNum = \'{techid}\'"):
-            flash('教师不存在！')
-        elif usesql(f"select * from Paper where PaperID = {papid}"):
-            if usesql(f"select * from PostPaper where PaperID = {papid} and IsAuthor = True") and isau == True:
-                flash('论文不能有两个通讯作者！')
-            elif usesql(f"select * from PostPaper where PaperID = {papid} and PostRank = {rank}"):
-                flash('论文的排名不能重复！')
-            elif usesql(f"select * from PostPaper where PaperID = {papid} and TeacherNum =\'{techid}\'"):
-                flash('不能重复添加！')
-            else:
-                usesql(
-                    f"insert into PostPaper value(\'{techid}\',{papid},{rank},{isau})")
-                flash('添加成功！')
-                return updatpost(0)
+        if usesql(f"select * from Paper where PaperID = {papid}"):
+            flash('论文已存在')
+        elif len(set(teid)) != len(teid):
+            flash('作者不能重复')
+        elif isau.count(True) != 1:
+            flash('通讯作者分配错误')
+        elif len(set(rank)) != len(rank) or set(rank) != set(range(1, len(rank)+1)):
+            flash('作者排名有误')
         else:
             usesql(
                 f"insert into Paper value({papid},\'{papname}\',\'{papsource}\',\'{papyear}\',{paptype},{paplevel})")
-            usesql(
-                f"insert into PostPaper value(\'{techid}\',{papid},{rank},{isau})")
+            for i in range(inputnum):
+                usesql(
+                    f"insert into PostPaper value(\'{teid[i]}\',{papid},{rank[i]},{isau[i]})")
             flash('添加成功！')
-            return updatpost(0)
+            return updatepost(0)
     elif action == 2:
         if not usesql(f"select * from Paper where PaperID = {papid}"):
             flash('论文不存在')
-            return updatpost(1)
-        usesql(f"delete from PostPaper where PaperID = {papid}")
-        usesql(f"delete from Paper where PaperID = {papid}")
-        flash("删除成功！")
-        return updatpost(0)
+        else:
+            usesql(f"delete from PostPaper where PaperID = {papid}")
+            usesql(f"delete from Paper where PaperID = {papid}")
+            flash("删除成功！")
+            return updatepost(0)
     elif action == 3:
         if not usesql(f"select * from Paper where PaperID = {papid}"):
             flash('论文不存在')
-            return updatpost(1)
-        usesql(
-            f"update Paper set PaperName=\'{papname}\',PaperFrom=\'{papsource}\',PaperYear=\'{papyear}\',PaperType={paptype},PaperLevel={paplevel} where PaperID={papid}")
-        flash("成功修改论文,修改则先删除数据再重新添加")
-        return updatpost(0)
-    return updatpost(1)
+        else:
+            usesql(
+                f"update Paper set PaperName=\'{papname}\',PaperFrom=\'{papsource}\',PaperYear=\'{papyear}\',PaperType={paptype},PaperLevel={paplevel} where PaperID={papid}")
+            flash("成功修改论文,修改其他则先删除数据再重新添加")
+            return updatepost(0)
+    elif action == 4:
+        if not usesql(f"select * from Paper where PaperID = {papid}"):
+            flash('论文不存在')
+        return updatepost(2)
+    return updatepost(1)
 
 
 @app.route("/project/", methods=['GET', 'POST'])
@@ -227,24 +246,24 @@ def project():
     try:
         print(request.form)
         for i in request.form:
-            if request.form.get(i) == '':
+            if request.form.get(i).replace("\'", "\\'") == '':
                 flash('输入不能为空')
                 return updateproject(1)
-        proid = request.form.get('proid')
-        proname = request.form.get('proname')
-        profrom = request.form.get('profrom')
+        proid = request.form.get('proid').replace("\'", "\\'")
+        proname = request.form.get('proname').replace("\'", "\\'")
+        profrom = request.form.get('profrom').replace("\'", "\\'")
         procost = float(request.form.get('procost'))
-        beginyear = int(request.form.get('beginyear'))
-        endyear = int(request.form.get('endyear'))
-        protype = int(request.form.get('protype'))
-        num = int(request.form.get('total'))
-        action = int(request.form.get('action'))
+        beginyear = int(calint(request.form.get('beginyear')))
+        endyear = int(calint(request.form.get('endyear')))
+        protype = int(calint(request.form.get('protype')))
+        num = int(calint(request.form.get('total')))
+        action = int(calint(request.form.get('action')))
         teid = []
         terank = []
         tecost = []
         for i in range(num):
             teid.append(request.form.get('teid'+str(i)))
-            terank.append(int(request.form.get('terank'+str(i))))
+            terank.append(int(calint(request.form.get('terank'+str(i)))))
             tecost.append(float(request.form.get('tecost'+str(i))))
     except:
         flash('输入错误')
@@ -271,22 +290,26 @@ def project():
     elif action == 2:
         if not usesql(f"select * from Project where ProjectID = \'{proid}\'"):
             flash('项目不存在')
-            return updateproject(1)
-        usesql(f"delete from HaveProject where ProjectID = \'{proid}\'")
-        usesql(f"delete from Project where ProjectID = \'{proid}\'")
-        flash("删除成功！")
-        return updateproject(0)
+        else:
+            usesql(f"delete from HaveProject where ProjectID = \'{proid}\'")
+            usesql(f"delete from Project where ProjectID = \'{proid}\'")
+            flash("删除成功！")
+            return updateproject(0)
     elif action == 3:
         if not usesql(f"select * from Project where ProjectID = \'{proid}\'"):
             flash('项目不存在')
-            return updateproject(1)
-        if not usesql(f"select * from Project where ProjectID = \'{proid}\' and ProjectCost = {procost}"):
+        elif not usesql(f"select * from Project where ProjectID = \'{proid}\' and ProjectCost = {procost}"):
             flash('不能修改项目总经费')
-            return updateproject(1)
-        usesql(
-            f"update Project set ProjectName=\'{proname}\',ProjectFrom=\'{profrom}\',ProjectType={protype},ProjectCost={procost},ProjectBegin = {beginyear},ProjectEnd = {endyear} where ProjectID=\'{proid}\'")
-        flash("成功修改项目,修改则先删除数据再重新添加")
-        return updateproject(0)
+        else:
+            usesql(
+                f"update Project set ProjectName=\'{proname}\',ProjectFrom=\'{profrom}\',ProjectType={protype},ProjectCost={procost},ProjectBegin = {beginyear},ProjectEnd = {endyear} where ProjectID=\'{proid}\'")
+            flash("成功修改项目,修改则先删除数据再重新添加")
+            return updateproject(0)
+    elif action == 4:
+        if not usesql(f"select * from Project where ProjectID = \'{proid}\'"):
+            flash('项目不存在')
+        else:
+            return updateproject(2)
     return updateproject(1)
 
 
@@ -306,19 +329,19 @@ def course():
     try:
         print(request.form)
         for i in request.form:
-            if request.form.get(i) == '':
+            if request.form.get(i).replace("\'", "\\'") == '':
                 flash('输入不能为空')
                 return updatecourse(1)
-        courseID = request.form.get("courseID")
-        teachyear = int(request.form.get("teachyear"))
-        teachterm = int(request.form.get("teachterm"))
-        inputnum = int(request.form.get("num"))
-        action = int(request.form.get("action"))
+        courseID = request.form.get("courseID").replace("\'", "\\'")
+        teachyear = int(calint(request.form.get("teachyear")))
+        teachterm = int(calint(request.form.get("teachterm")))
+        inputnum = int(calint(request.form.get("num")))
+        action = int(calint(request.form.get("action")))
         teid = []
         tetime = []
         for i in range(inputnum):
             teid.append(request.form.get('teid'+str(i)))
-            tetime.append(int(request.form.get('tetime'+str(i))))
+            tetime.append(int(calint(request.form.get('tetime'+str(i)))))
     except:
         flash('输入错误')
         return updatecourse(1)
@@ -328,7 +351,7 @@ def course():
             flash("课程不存在！")
             return updatecourse(1)
         else:
-            total = int(ret[0][2])
+            total = int(calint(ret[0][2]))
             if usesql(f"select * from TeachCourse where CourseID = \'{courseID}\' and TeachYear = {teachyear} and TeachTerm = {teachterm}"):
                 flash("课程已安排!")
                 return updatecourse(1)
@@ -351,6 +374,8 @@ def course():
     elif action == 3:
         flash("修改请先删除再添加")
         return updatecourse(1)
+    elif action == 4:
+        return updatecourse(2)
     return updatecourse(1)
 
 
@@ -369,9 +394,9 @@ def search():
         return redirect("/login/")
     try:
         print(request.form)
-        teid = request.form.get("techid")
-        beginyear = int(request.form.get("beginyear"))
-        endyear = int(request.form.get("endyear"))
+        teid = request.form.get("teid").replace("\'", "\\'")
+        beginyear = int(calint(request.form.get("beginyear")))
+        endyear = int(calint(request.form.get("endyear")))
     except:
         flash("输入错误!")
         return updatesearch(1, '', 'none')
@@ -430,7 +455,7 @@ def search():
         ii += 1
         if int(papyear) <= endyear and int(papyear) >= beginyear:
             ansstr += str(ii) + \
-                f". {papname},⠀{papfrom},⠀{papyear},⠀{paplevel},⠀排名:{paprank},⠀{papis}"+r"\n"
+                f". {papname}, {papfrom}, {papyear}, {paplevel},⠀排名:{paprank}, {papis}"+r"\n"
     ansstr += r"#### 承担项目情况\n"
     proinfo = usesql(
         f"select Project.ProjectName,Project.ProjectFrom,Project.ProjectType,Project.ProjectBegin,Project.ProjectEnd,Project.ProjectCost,HaveProject.HaveCost from Project,HaveProject where Project.ProjectID = HaveProject.ProjectID and HaveProject.TeacherNum =  \'{teid}\'")

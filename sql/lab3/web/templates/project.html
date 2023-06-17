@@ -71,20 +71,20 @@
                         <div class="col-sm-5 form-group">
                             <div>
                                 开始年份: <input type="number" name="beginyear" placeholder="输入开始年份"
-                                    value="{{form_data.beginyear if form_data else ''}}">
+                                    value="{{form_data.beginyear if form_data else ''}}" min='1'>
                             </div>
                         </div>
                         <div class="col-sm-5 form-group">
                             <div>
                                 结束年份: <input type="number" name="endyear" placeholder="输入结束年份"
-                                    value="{{form_data.endyear if form_data else ''}}">
+                                    value="{{form_data.endyear if form_data else ''}}" min='1'>
                             </div>
                         </div>
                     </div>
                     <div class="table-one-row">
                         <div class="col-sm-5 form-group">
                             <div>
-                                项目类型: <select name="protype" placeholder="输入项目类型">
+                                项目类型: <select name="protype" style="font-size: 19px;">
                                     <option value="1" {% if form_data and form_data.protype=="1" %}selected{% endif %}>
                                         1-国家级项目</option>
                                     <option value="2" {% if form_data and form_data.protype=="2" %}selected{% endif %}>
@@ -159,13 +159,15 @@
                         </script>
                     </div>
                     <div class="col-sm-5 form-group">
-                        具体操作: <select name="action">
+                        具体操作: <select name="action" style="font-size: 19px;">
                             <option value="1" {% if form_data and form_data.action=="1" %}selected{% endif %}>
                                 1-增加数据</option>
                             <option value="2" {% if form_data and form_data.action=="2" %}selected{% endif %}>
                                 2-删除数据 </option>
                             <option value="3" {% if form_data and form_data.action=="3" %}selected{% endif %}>
                                 3-修改数据</option>
+                            <option value="4" {% if form_data and form_data.action=="4" %}selected{% endif %}>
+                                4-查询数据</option>
                         </select>
                     </div>
                     <div class="col-sm-5 flash-message">
