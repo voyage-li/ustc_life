@@ -182,6 +182,9 @@ def register():
         return render_template("register.html")
     acceptid = request.form.get('account').replace("\'", "\\'")
     acceptpwd = request.form.get('pwd').replace("\'", "\\'")
+    if acceptid == '' or acceptpwd == '':
+        flash("用户名或密码不能为空")
+        return render_template('register.html')
     print(acceptid, acceptpwd)
     if usesql(f"select * from accountinfo where ac=\'{acceptid}\'"):
         flash("用户已被注册！")
@@ -514,6 +517,7 @@ def search():
     couinfo = usesql(
         f"select Course.CourseID,Course.CourseName,TeachCourse.TeachTime,TeachCourse.TeachYear,TeachCourse.TeachTerm from TeachCourse,Course where TeachCourse.CourseID = Course.CourseID and TeachCourse.TeacherNum = \'{teid}\'")
     print(couinfo)
+    ii = 0
     for item in couinfo:
         coid = item[0]
         coname = item[1]
@@ -521,7 +525,9 @@ def search():
         teyear = item[3]
         teterm = (lambda x: {1: '春', 2: '夏', 3: '秋'}[x])(item[4])
         if teyear <= endyear and teyear >= beginyear:
-            ansstr += f"课程号:{coid}⠀⠀⠀⠀⠀⠀⠀⠀课程名:{coname}⠀⠀⠀⠀⠀⠀⠀⠀主讲学时:{tetime}⠀⠀⠀⠀⠀⠀⠀⠀学期:{teyear} {teterm}"+r"\n\n"
+            ii += 1
+            ansstr += str(ii) + \
+                f". 课程号:{coid}⠀⠀⠀⠀⠀⠀⠀⠀课程名:{coname}⠀⠀⠀⠀⠀⠀⠀⠀主讲学时:{tetime}⠀⠀⠀⠀⠀⠀⠀⠀学期:{teyear} {teterm}"+r"\n"
     ansstr += r"#### 发表论文情况\n"
     paperinfo = usesql(
         f"select Paper.PaperName,Paper.PaperFrom,SUBSTRING_INDEX(Paper.PaperYear, '-', 1),Paper.PaperType,PostPaper.PostRank,PostPaper.IsAuthor from Paper,PostPaper where Paper.PaperID = PostPaper.PaperID and PostPaper.TeacherNum = \'{teid}\'")

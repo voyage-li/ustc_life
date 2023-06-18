@@ -43,13 +43,13 @@
                         </div>
                         <div class="col-sm-5 form-group">
                             论文名称: <input type="text" name="papname" placeholder="输入论文名称"
-                                value="{{form_data.papname if form_data else ''}}">
+                                value="{{form_data.papname if form_data else ''}}" maxlength="255">
                         </div>
                     </div>
                     <div class="table-one-row">
                         <div class="col-sm-5 form-group">
                             论文发表: <input type="text" name="papsource" placeholder="输入发表源"
-                                value="{{form_data.papsource if form_data else ''}}">
+                                value="{{form_data.papsource if form_data else ''}}" maxlength="255">
                         </div>
                         <div class="col-sm-5 form-group">
                             发表年份: <input type="number" name="papyear" placeholder="输入发表年份"
@@ -207,16 +207,26 @@
                 <div class="table-responsive">
                     <table class="table">
                         <tr>
-                            <th>教师工号<button onclick="sortTable(0)"> ▼ </button></th>
-                            <th>教师<button onclick="sortTable(1)"> ▼ </button></th>
-                            <th>论文序号<button onclick="sortTable(2)"> ▼ </button></th>
-                            <th>论文<button onclick="sortTable(3)"> ▼ </button></th>
-                            <th>排名<button onclick="sortTable(4)"> ▼ </button></th>
-                            <th>通讯作者<button onclick="sortTable(5)"> ▼ </button></th>
-                            <th>发表源<button onclick="sortTable(6)"> ▼ </button></th>
-                            <th>发表年份<button onclick="sortTable(7)"> ▼ </button></th>
-                            <th>类型<button onclick="sortTable(8)"> ▼ </button></th>
-                            <th>级别<button onclick="sortTable(9)"> ▼ </button></th>
+                            <th>教师工号<button onclick="sortTable_r(0)"> ▲ </button><button onclick="sortTable(0)"> ▼
+                                </button></th>
+                            <th>教师<button onclick="sortTable_r(1)"> ▲ </button><button onclick="sortTable(1)"> ▼
+                                </button></th>
+                            <th>论文序号<button onclick="sortTable_r(2)"> ▲ </button><button onclick="sortTable(2)"> ▼
+                                </button></th>
+                            <th>论文<button onclick="sortTable_r(3)"> ▲ </button><button onclick="sortTable(3)"> ▼
+                                </button></th>
+                            <th>排名<button onclick="sortTable_r(4)"> ▲ </button><button onclick="sortTable(4)"> ▼
+                                </button></th>
+                            <th>通讯作者<button onclick="sortTable_r(5)"> ▲ </button><button onclick="sortTable(5)"> ▼
+                                </button></th>
+                            <th>发表源<button onclick="sortTable_r(6)"> ▲ </button><button onclick="sortTable(6)"> ▼
+                                </button></th>
+                            <th>发表年份<button onclick="sortTable_r(7)"> ▲ </button><button onclick="sortTable(7)"> ▼
+                                </button></th>
+                            <th>类型<button onclick="sortTable_r(8)"> ▲ </button><button onclick="sortTable(8)"> ▼
+                                </button></th>
+                            <th>级别<button onclick="sortTable_r(9)"> ▲ </button><button onclick="sortTable(9)"> ▼
+                                </button></th>
                         </tr>
                         {% for item in data_list %}
                         <tr>
@@ -235,6 +245,32 @@
                     </table>
                 </div>
                 <script>
+                    function sortTable_r(columnIndex) {
+                        var table, rows, switching, i, x, y, shouldSwitch;
+                        table = document.querySelector("table");
+                        switching = true;
+
+                        while (switching) {
+                            switching = false;
+                            rows = table.rows;
+
+                            for (i = 1; i < rows.length - 1; i++) {
+                                shouldSwitch = false;
+                                x = rows[i].querySelectorAll("td")[columnIndex].innerText;
+                                y = rows[i + 1].querySelectorAll("td")[columnIndex].innerText;
+
+                                if (y.localeCompare(x) > 0) {
+                                    shouldSwitch = true;
+                                    break;
+                                }
+                            }
+
+                            if (shouldSwitch) {
+                                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                                switching = true;
+                            }
+                        }
+                    }
                     function sortTable(columnIndex) {
                         var table, rows, switching, i, x, y, shouldSwitch;
                         table = document.querySelector("table");

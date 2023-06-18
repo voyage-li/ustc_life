@@ -41,13 +41,13 @@
                         <div class="col-sm-5 form-group">
                             <div>
                                 项目编号: <input type="text" name="proid" placeholder="输入项目编号"
-                                    value="{{form_data.proid if form_data else ''}}">
+                                    value="{{form_data.proid if form_data else ''}}" maxlength="255">
                             </div>
                         </div>
                         <div class="col-sm-5 form-group">
                             <div>
                                 项目名称: <input type="text" name="proname" placeholder="输入项目名称"
-                                    value="{{form_data.proname if form_data else ''}}">
+                                    value="{{form_data.proname if form_data else ''}}" maxlength="255">
                             </div>
                         </div>
                     </div>
@@ -56,12 +56,12 @@
                         <div class="col-sm-5 form-group">
                             <div>
                                 项目来源: <input type="text" name="profrom" placeholder="输入项目来源"
-                                    value="{{form_data.profrom if form_data else ''}}">
+                                    value="{{form_data.profrom if form_data else ''}}" maxlength="255">
                             </div>
                         </div>
                         <div class="col-sm-5 form-group">
                             <div>
-                                项目经费: <input type="text" name="procost" placeholder="输入项目经费"
+                                项目经费: <input type="number" step="any" name="procost" placeholder="输入项目经费"
                                     value="{{form_data.procost if form_data else ''}}">
                             </div>
                         </div>
@@ -142,6 +142,7 @@
                                     div.className = "col-md-3 form-group";
                                     var input = document.createElement("input");
                                     input.type = "number";
+                                    input.step = "any";
                                     input.name = "tecost" + (i);
                                     input.placeholder = "输入承担经费";
                                     div.appendChild(input);
@@ -191,7 +192,8 @@
                             </div>
                             <div class="col-md-3 form-group"><input type="number" name="terank0" placeholder="输入教师排名">
                             </div>
-                            <div class="col-md-3 form-group"><input type="number" name="tecost0" placeholder="输入承担经费">
+                            <div class="col-md-3 form-group"><input type="number" step="any" name="tecost0"
+                                    placeholder="输入承担经费">
                             </div>
                             <div style="clear:both"></div>
                         </div>
@@ -203,16 +205,26 @@
                 <div class="table-responsive">
                     <table class="table">
                         <tr>
-                            <th>教师工号<button onclick="sortTable(0)"> ▼ </button></th>
-                            <th>教师<button onclick="sortTable(1)"> ▼ </button></th>
-                            <th>项目号<button onclick="sortTable(2)"> ▼ </button></th>
-                            <th>项目名<button onclick="sortTable(3)"> ▼ </button></th>
-                            <th>排名<button onclick="sortTable(4)"> ▼ </button></th>
-                            <th>承担经费<button onclick="sortTable(5)"> ▼ </button></th>
-                            <th>项目来源<button onclick="sortTable(6)"> ▼ </button></th>
-                            <th>项目类型<button onclick="sortTable(7)"> ▼ </button></th>
-                            <th>总经费<button onclick="sortTable(8)"> ▼ </button></th>
-                            <th>年份<button onclick="sortTable(9)"> ▼ </button></th>
+                            <th>教师工号<button onclick="sortTable_r(0)"> ▲ </button><button onclick="sortTable(0)"> ▼
+                                </button></th>
+                            <th>教师<button onclick="sortTable_r(1)"> ▲ </button><button onclick="sortTable(1)"> ▼
+                                </button></th>
+                            <th>项目号<button onclick="sortTable_r(2)"> ▲ </button><button onclick="sortTable(2)"> ▼
+                                </button></th>
+                            <th>项目名<button onclick="sortTable_r(3)"> ▲ </button><button onclick="sortTable(3)"> ▼
+                                </button></th>
+                            <th>排名<button onclick="sortTable_r(4)"> ▲ </button><button onclick="sortTable(4)"> ▼
+                                </button></th>
+                            <th>承担经费<button onclick="sortTable_r(5)"> ▲ </button><button onclick="sortTable(5)"> ▼
+                                </button></th>
+                            <th>项目来源<button onclick="sortTable_r(6)"> ▲ </button><button onclick="sortTable(6)"> ▼
+                                </button></th>
+                            <th>项目类型<button onclick="sortTable_r(7)"> ▲ </button><button onclick="sortTable(7)"> ▼
+                                </button></th>
+                            <th>总经费<button onclick="sortTable_r(8)"> ▲ </button><button onclick="sortTable(8)"> ▼
+                                </button></th>
+                            <th>年份<button onclick="sortTable_r(9)"> ▲ </button><button onclick="sortTable(9)"> ▼
+                                </button></th>
                         </tr>
                         {% for item in data_list %}
                         <tr>
@@ -231,6 +243,32 @@
                     </table>
                 </div>
                 <script>
+                    function sortTable_r(columnIndex) {
+                        var table, rows, switching, i, x, y, shouldSwitch;
+                        table = document.querySelector("table");
+                        switching = true;
+
+                        while (switching) {
+                            switching = false;
+                            rows = table.rows;
+
+                            for (i = 1; i < rows.length - 1; i++) {
+                                shouldSwitch = false;
+                                x = rows[i].querySelectorAll("td")[columnIndex].innerText;
+                                y = rows[i + 1].querySelectorAll("td")[columnIndex].innerText;
+
+                                if (y.localeCompare(x) > 0) {
+                                    shouldSwitch = true;
+                                    break;
+                                }
+                            }
+
+                            if (shouldSwitch) {
+                                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                                switching = true;
+                            }
+                        }
+                    }
                     function sortTable(columnIndex) {
                         var table, rows, switching, i, x, y, shouldSwitch;
                         table = document.querySelector("table");
