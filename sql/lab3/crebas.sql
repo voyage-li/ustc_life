@@ -22,6 +22,15 @@ drop table if exists TeachCourse;
 
 drop table if exists teacher;
 
+drop table if exists accountinfo;
+
+create table
+    accountinfo(
+        ac char(255) not null,
+        passwd char(255) not null,
+        primary key(ac)
+    );
+
 /*==============================================================*/
 
 /* Table: Course                                                */

@@ -159,13 +159,15 @@
                 <div class="table-responsive">
                     <table class="table">
                         <tr>
-                            <th>教师工号</th>
-                            <th>教师</th>
-                            <th>课程号</th>
-                            <th>课程名</th>
-                            <th>授课年份</th>
-                            <th>授课学期</th>
-                            <th>授课学时</th>
+                            <th>教师工号<button onclick="sortTable(0)"> ▼ </button></th>
+                            <th>教师<button onclick="sortTable(1)"> ▼ </button></th>
+                            <th>课程号<button onclick="sortTable(2)"> ▼ </button></th>
+                            <th>课程名<button onclick="sortTable(3)"> ▼ </button></th>
+                            <th>授课年份<button onclick="sortTable(4)"> ▼ </button></th>
+                            <th>授课学期<button onclick="sortTable(5)"> ▼ </button></th>
+                            <th>授课学时<button onclick="sortTable(6)"> ▼ </button></th>
+                            <th>总学时<button onclick="sortTable(7)"> ▼ </button></th>
+                            <th>课程性质<button onclick="sortTable(8)"> ▼ </button></th>
                         </tr>
                         {% for item in data_list %}
                         <tr>
@@ -176,10 +178,40 @@
                             <td>{{item.teachyear}}</td>
                             <td>{{item.teachterm}}</td>
                             <td>{{item.teachtime}}</td>
+                            <td>{{item.coursetime}}</td>
+                            <td>{{item.coursetype}}</td>
                         </tr>
                         {% endfor %}
                     </table>
                 </div>
+                <script>
+                    function sortTable(columnIndex) {
+                        var table, rows, switching, i, x, y, shouldSwitch;
+                        table = document.querySelector("table");
+                        switching = true;
+
+                        while (switching) {
+                            switching = false;
+                            rows = table.rows;
+
+                            for (i = 1; i < rows.length - 1; i++) {
+                                shouldSwitch = false;
+                                x = rows[i].querySelectorAll("td")[columnIndex].innerText;
+                                y = rows[i + 1].querySelectorAll("td")[columnIndex].innerText;
+
+                                if (x.localeCompare(y) > 0) {
+                                    shouldSwitch = true;
+                                    break;
+                                }
+                            }
+
+                            if (shouldSwitch) {
+                                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                                switching = true;
+                            }
+                        }
+                    }
+                </script>
             </div>
         </div>
     </div>
