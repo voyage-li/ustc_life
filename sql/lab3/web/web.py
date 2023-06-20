@@ -129,7 +129,7 @@ def updatecourse(num, postret=''):
             'courseID': item[1],
             'courseName': coursedata[item[1]][0],
             'teachyear': item[2],
-            'teachterm': (lambda x:  {1: '春季学期', 2: '夏季学期', 3: '冬季学期'}[x])(item[3]),
+            'teachterm': (lambda x:  {1: '春季学期', 2: '夏季学期', 3: '秋季学期'}[x])(item[3]),
             'teachtime': item[4],
             'coursetime': coursedata[item[1]][1],
             'coursetype': (lambda x: {1: '本科生课程', 2: '研究生课程'}[x])(coursedata[item[1]][2])

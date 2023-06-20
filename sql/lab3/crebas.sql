@@ -124,7 +124,7 @@ create table
         TeachYear int,
         TeachTerm int,
         TeachTime int,
-        primary key (TeacherNum, CourseID)
+        primary key (TeacherNum, CourseID, TeachYear,TeachTerm)
     );
 
 /*==============================================================*/
