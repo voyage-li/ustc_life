@@ -1,6 +1,8 @@
-## Rectangle-fitting
+# 2023年春形式化方法大作业
 
 <p style="text-align:right">李远航 PB20000137</p>
+
+## Rectangle-fitting
 
 #### 一、实验内容
 
@@ -149,3 +151,123 @@ X8 = 4 Y8 = 0 W8 = 2 H8 = 5
 
 - 使用SMT解决问题思路清晰，且性能高效
 - 使用搜索的方式解决约束满足问题在策略合理的情况下，一样能达到不错的效率
+
+
+
+
+
+## 设计CNF的SAT求解算法
+
+#### 一、实验内容
+
+设计CNF的SAT求解算法
+
+![image-20230629162559199](./assets/image-20230629162559199.png)
+
+#### 二、实验思路
+
+使用DPLL算法实现，DPLL算法的伪代码如下：
+
+![image-20230629162716570](./assets/image-20230629162716570.png)
+
+对整个CNF表达式使用单位字句传播，例如：
+$$
+(a\vee b\vee c\vee\neg d)\wedge(\neg a\vee c)\wedge(\neg c\vee d)\wedge(a)
+$$
+表达式中 $a$ 单位字句，显然原表达式为真需要 $a$ 变量为真，再由于 $a$ 的值已经取定，可以借此化简原CNF表达式成为：
+$$
+(c)\wedge(\neg c\vee d)
+$$
+而对于无法直接判断的变量，使用深度优先搜索，完成对值的查找过程，具体实现的`python`代码如下：
+
+```python
+def dpll(var, cnflist, orderlist):
+    if len(cnflist) == 0 or len(orderlist) == var:
+        if len(cnflist) == 0:
+            retlist = []
+            for i in orderlist:
+                retlist.append(i if orderlist[i] else -i)
+            return retlist
+        else:
+            return []
+    jdg_this = -1
+    for cnf_text in cnflist:
+        if len(cnf_text) != 0:
+            jdg_this = abs(cnf_text[0])
+        if len(cnf_text) == 1:
+            orderlist[abs(cnf_text[0])] = (cnf_text[0] > 0)
+            break
+
+    basecnf = copy.deepcopy(cnflist)
+
+    if jdg_this in orderlist:
+        for cnf_text in basecnf:
+            if jdg_this in cnf_text:
+                if orderlist[jdg_this] == True:
+                    cnflist.remove(cnf_text)
+                else:
+                    cnflist[cnflist.index(cnf_text)].remove(jdg_this)
+            elif -jdg_this in cnf_text:
+                if orderlist[jdg_this] == False:
+                    cnflist.remove(cnf_text)
+                else:
+                    cnflist[cnflist.index(cnf_text)].remove(-jdg_this)
+        return dpll(var, cnflist, copy.deepcopy(orderlist))
+    else:
+        orderlist[jdg_this] = True
+        for cnf_text in basecnf:
+            if jdg_this in cnf_text:
+                cnflist.remove(cnf_text)
+            elif -jdg_this in cnf_text:
+                cnflist[cnflist.index(cnf_text)].remove(-jdg_this)
+        ret = dpll(var, cnflist, copy.deepcopy(orderlist))
+        if ret:
+            return ret
+        cnflist = copy.deepcopy(basecnf)
+        orderlist[jdg_this] = False
+        for cnf_text in basecnf:
+            if jdg_this in cnf_text:
+                cnflist[cnflist.index(cnf_text)].remove(jdg_this)
+            elif -jdg_this in cnf_text:
+                cnflist.remove(cnf_text)
+        return dpll(var, cnflist, copy.deepcopy(orderlist))
+```
+
+#### 三、实验结果
+
+本程序使用标准的CNF输入格式，即第一行表明CNF表达式的变量数，子句数，后续输入表达式，如下所示，表示输入有三个变量，6个子句
+
+```text
+p cnf 3 6
+1 2 0
+1 -2 0
+3 2 0
+-3 1 0
+1 2 3 0
+-1 -2 0
+```
+
+这里使用`python-sat`验证代码运行结果的准确性，如下所示
+
+```text
+py SAT    [1, -2, 3]
+my dpll   [1, -2, 3]
+```
+
+可以看到，程序运行的结果相同，验证了程序的正确性
+
+下面比较程序运行的效率，这里选用了两组测试数据，一组有解，一组无解，分别运行5000次，观察程序的运行时间：
+
+|            | input0（有解） | input1（无解） |
+| ---------- | -------------- | -------------- |
+| python-sat | 0.0825789s     | 0.0915676      |
+| my-dpll    | 0.1068725      | 0.9983847      |
+
+可以看到，自主实现的求解算法程序性能弱于`python-sat`，其原因可能是在不必要的搜索分支上浪费了大量的时间，以及`python-sat`可能使用了更优秀的剪枝策略
+
+#### 四、实验收获
+
+- 对DPLL算法有了更深的理解
+- 亲自实现的DPLL算法求解CNF的性能远远不如现代化工具，还有更多需要学习的地方
+
+
