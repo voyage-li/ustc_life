@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 
+
 class BayesianNetwork:
     def __init__(self, n_labels=10, n_pixels=784, n_values=2) -> None:
         '''
@@ -29,7 +30,7 @@ class BayesianNetwork:
         # Calculate prior probability
         for label in labels:
             self.labels_prior[label] += 1
-        
+
         # Calculate conditional probability
         for i in range(n_samples):
             label = labels[i]
@@ -37,14 +38,15 @@ class BayesianNetwork:
                 pixel_value = pixels[i, pixel]
                 self.pixels_prior[pixel, pixel_value] += 1
                 self.pixels_cond_label[pixel, pixel_value, label] += 1
-                
+
         # Normalize conditional probability
         for pixel in range(self.n_pixels):
             for value in range(self.n_values):
                 self.pixels_prior[pixel, value] /= n_samples
                 for label in range(self.n_labels):
-                    self.pixels_cond_label[pixel, value, label] /= self.labels_prior[label]
-        
+                    self.pixels_cond_label[pixel, value,
+                                           label] /= self.labels_prior[label]
+
         self.labels_prior /= n_samples
 
     # predict the labels for new data
@@ -56,19 +58,20 @@ class BayesianNetwork:
         n_samples = len(pixels)
         labels = np.zeros(n_samples)
         # TODO: predict for new data
-        
+
         for i in range(n_samples):
             pixel_values = pixels[i]
             label_scores = np.zeros(self.n_labels)
-            
+
             for label in range(self.n_labels):
                 label_scores[label] = self.labels_prior[label]
                 for pixel in range(self.n_pixels):
                     pixel_value = pixel_values[pixel]
-                    label_scores[label] *= self.pixels_cond_label[pixel, pixel_value, label]
-                    
+                    label_scores[label] *= self.pixels_cond_label[pixel,
+                                                                  pixel_value, label]
+
             labels[i] = np.argmax(label_scores)
-        
+
         return labels
 
     # calculate the score (accuracy) of the model
@@ -80,7 +83,8 @@ class BayesianNetwork:
         n_samples = len(labels)
         labels_pred = self.predict(pixels)
         return np.sum(labels_pred == labels) / n_samples
-    
+
+
 if __name__ == '__main__':
     # load data
     train_data = np.loadtxt('../data/train.csv', delimiter=',', dtype=np.uint8)
