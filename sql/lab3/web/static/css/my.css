@@ -1,0 +1,141 @@
+html,
+body {
+    width: 100%;
+    height: 100%;
+}
+
+div {
+    height: 100%;
+    width: 100%;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.left-wrap {
+    width: 15%;
+    float: left;
+    background-color: #eef1f5;
+}
+
+.right-wrap {
+    width: 85%;
+    float: right;
+    background-image: url("/static/img/004.jpg");
+}
+.right-wrap-base {
+    width: 85%;
+    float: right;
+    background-image: url("/static/img/004.jpg");
+}
+
+.left-wrap .left-blank {
+    height: 20%;
+}
+
+.left-wrap .left-text-wrap {
+    height: 65px;
+    display: flex;
+    color: #6777ef;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+}
+
+.left-wrap .left-text-wrap:hover {
+    color: aliceblue;
+    background-color: #86929c;
+}
+
+.left-wrap .left-text-wrap .left-text {
+    font-size: 19px;
+    align-self: center;
+    padding-left: 25%;
+    padding-right: 10%;
+    margin-bottom: 0px;
+}
+
+.btn-primary {
+    margin-bottom: 5px;
+    text-align: center;
+}
+
+.btn-input{
+    float: right;
+    margin-right: 10px;
+}
+
+.welcome{
+    text-align: center;
+    padding-top: 25%;
+    font-size: 70px;
+    color: white;
+    text-shadow:  
+    0px 0px 20px rgb(0, 195, 255),
+    0px 0px 10px rgb(0, 60, 255),
+    0px 0px 10px rgb(0, 8, 255), 
+    0px 0px 10px rgb(0, 0, 255);
+}
+
+.inputforpaper{
+    margin-top: 4%;
+    margin-bottom: 3%;
+    margin-left: 5%;
+    margin-right: 10%;
+    background-color: #eef1f5;
+    width: 90%;
+    font-size: 16px;
+    padding-top: 1%;
+    height: auto;
+    max-height: 200px;
+    overflow-y: scroll; 
+    border-radius: 5px;
+}
+
+
+.out-table{
+    margin-left: 5%;
+    margin-right: 10%;
+    background-color: #eef1f5;
+    width: 90%;
+    height: 60%;
+    border: 2px solid rgb(75, 1, 1);
+    border-radius: 5px;
+}
+th {
+    text-align: center;
+}
+
+td,th{
+    border-bottom: 1px solid black;
+}
+.table{
+    text-align: center;
+}
+
+.form-group{
+    margin-bottom: 4px;
+}
+.flash-message {
+    font-size: 20px;
+    color: red;
+}
+
+.sameline{
+    float: left;
+}
+
+
+.out-pdf{
+    margin-left: 5%;
+    margin-right: 10%;
+    background-color: #eef1f5;
+    width: 90%;
+    height: 70%;
+    border: 2px solid rgb(75, 1, 1);
+    border-radius: 5px;
+    padding-left: 20px;
+    padding-right: 20px;
+    overflow-y: auto;
+}

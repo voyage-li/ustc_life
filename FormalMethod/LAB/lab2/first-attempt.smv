@@ -1,0 +1,43 @@
+MODULE main
+VAR 
+    p1 : process P(p2.value);
+    p2 : process P(p1.value);
+
+-- 验证 Safety:进程不会同时执行
+CTLSPEC
+    AG(!((p1.value = c) & (p2.value = c)))
+
+-- 验证 Liveness:进程进入临界区总会被执行
+CTLSPEC
+    AG((p1.value = t) -> AF(p1.value = c))
+CTLSPEC
+    AG((p2.value = t) -> AF(p2.value = c))
+
+-- 验证 Non-blocking:进程随时可以请求进入临界区
+CTLSPEC
+    AG((p1.value = n) -> EX(p1.value = t))
+CTLSPEC
+    AG((p2.value = n)-> EX(p2.value = t)) 
+
+-- 验证 No strict sequencing:进程不需要按照严格的顺序进入临界区
+CTLSPEC
+    EF((p1.value = c) & E[(p1.value = c) U (!(p1.value = c) & E[!(p2.value = c) U (p1.value = c)])])
+CTLSPEC
+    EF((p2.value = c) & E[(p2.value = c) U (!(p2.value = c) & E[!(p1.value = c) U (p2.value = c)])])
+
+MODULE P(other)
+VAR
+    value : {n, t, c};
+ASSIGN
+    init(value) := n;
+    next(value) := case
+                        (value = n) & (other = n) : {t};
+                        (value = n) & (other = t) : {t};
+                        (value = n) & (other = c) : {t};
+                        (value = t) & (other = n) : {c};
+                        (value = t) & (other = t) : {c};
+                        (value = c) & (other = n) : {n};
+                        (value = c) & (other = t) : {n};
+                        TRUE : value;
+                    esac;
+FAIRNESS running

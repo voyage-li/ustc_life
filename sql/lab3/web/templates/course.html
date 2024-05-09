@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <title>登记课程</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/v4-shims.css">
+    <link rel="stylesheet" href="/static/plugins/bootstrap-3.4.1/css/bootstrap.css">
+    <link rel="stylesheet" href="/static/css/my.css">
+    <script>
+
+    </script>
+</head>
+
+<body>
+    <div class="total-wrap">
+        <div class="left-wrap">
+            <div class="left-blank"></div>
+            <div class="left-text-wrap">
+                <p class="left-text"><i class="fa fa-home"></i> <a href="/">管理主页</a></p>
+            </div>
+            <div class="left-text-wrap">
+                <p class="left-text"><i class="fa fa-book"></i> <a href="/paper">登记论文</a></p>
+            </div>
+            <div class="left-text-wrap">
+                <p class="left-text"><i class="fa fa-file"></i> <a href="/project">登记项目</a></p>
+            </div>
+            <div class="left-text-wrap">
+                <p class="left-text"><i class="fa fa-pencil-square"></i> <a href="/course">登记课程</a></p>
+            </div>
+            <div class="left-text-wrap">
+                <p class="left-text"><i class="fa fa-search"></i> <a href="/search">查询内容</a></p>
+            </div>
+            <form method="post" style="margin-top:70px;margin-left: 30%;margin-right: auto;"><button
+                    class="btn btn-primary" type="submit">登出</button></form>
+        </div>
+        <div class="right-wrap">
+            <div class="inputforpaper">
+                <form method="post" action="/course/">
+                    <div class="table-one-row">
+                        <div class="col-sm-5 form-group">
+                            课程信息: <select name="courseID" style="width:auto;font-size: 19px;">
+                                {% for coid in colist %}
+                                <option value="{{coid}}">{{coid}}-{{colist[coid][0]}}-{{colist[coid][1]}}学时</option>
+                                {% endfor%}
+                            </select>
+                        </div>
+                        <div class="col-sm-5 form-group">
+                            授课年份: <input type="number" name="teachyear" placeholder="输入授课年份"
+                                value="{{form_data.teachyear if form_data else ''}}" min="1">
+                        </div>
+                    </div>
+                    <div class="table-one-row">
+                        <div class="col-sm-5 form-group">
+                            授课学期: <select name="teachterm">
+                                <option value="1" {% if form_data and form_data.action=="1" %}selected{% endif %}>
+                                    1-春季学期</option>
+                                <option value="2" {% if form_data and form_data.action=="2" %}selected{% endif %}>
+                                    2-夏季学期 </option>
+                                <option value="3" {% if form_data and form_data.action=="3" %}selected{% endif %}>
+                                    3-秋季学期</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-5 form-group">
+                            授课人数: <input type="number" id="inputnum" name="num" onchange="updateinput()" min="1"
+                                value="1">
+                        </div>
+                    </div>
+                    <div class="table-one-row">
+                        <div class="col-sm-5 form-group">
+                            具体操作: <select name="action">
+                                <option value="1" {% if form_data and form_data.action=="1" %}selected{% endif %}>
+                                    1-增加数据</option>
+                                <option value="2" {% if form_data and form_data.action=="2" %}selected{% endif %}>
+                                    2-删除数据 </option>
+                                <option value="3" {% if form_data and form_data.action=="3" %}selected{% endif %}>
+                                    3-修改数据</option>
+                                <option value="4" {% if form_data and form_data.action=="4" %}selected{% endif %}>
+                                    4-查询数据</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div style="clear:both;"></div>
+                    <script>
+                        oldvalue = 0;
+                        function updateinput() {
+                            var num = document.getElementById("inputnum")
+                            var inputcontainer = document.getElementById("dynamic-input");
+                            if (num.value == 0) {
+                                return;
+                            }
+                            if (Number(oldvalue) > num.value) {
+                                var child = inputcontainer.children;
+                                for (var i = Number(oldvalue); i > num.value; i--) {
+                                    inputcontainer.removeChild(child[i - 1]);
+                                }
+                            }
+                            for (var i = Number(oldvalue); i != 0 && i < num.value; i++) {
+                                var totaldiv = document.createElement("div");
+
+                                var div = document.createElement("div");
+                                div.className = "col-md-3 form-group";
+                                div.style = "font-size: 19px;"
+                                var input = document.createElement("select");
+                                input.innerHTML = "{% for teid in telist %}<option value=\"{{teid}}\">{{teid}}-{{telist[teid]}}</option>{%endfor%}"
+                                input.name = "teid" + (i);
+                                input.style = "width:200px;text-align:center;";
+                                div.appendChild(input);
+                                totaldiv.appendChild(div);
+
+                                var div = document.createElement("div");
+                                div.className = "col-md-3 form-group";
+                                var input = document.createElement("input");
+                                input.type = "number";
+                                input.name = "tetime" + (i);
+                                input.placeholder = "输入授课学时";
+                                div.appendChild(input);
+                                totaldiv.appendChild(div);
+
+                                var div = document.createElement("div");
+                                div.style = "clear:both";
+                                totaldiv.append(div);
+
+                                inputcontainer.appendChild(totaldiv);
+                            }
+                            oldvalue = num.value;
+                        }
+                        updateinput()
+                    </script>
+                    <div id="dynamic-input" class="table-one-row dinamic-input">
+                        <div>
+                            <div class="col-md-3 form-group" style="font-size: 19px;">
+                                <select name="teid0" style=" width:200px;text-align:center;">
+                                    {% for teid in telist %}
+                                    <option value="{{teid}}">{{teid}}-{{telist[teid]}}</option>
+                                    {% endfor%}
+                                </select>
+                            </div>
+                            <div class="col-md-3 form-group"><input type="number" name="tetime0" placeholder="输入授课学时">
+                            </div>
+                            <div style="clear: both;"></div>
+                        </div>
+                    </div>
+                    <div class="col-sm-5 flash-message">
+                        {% with messages = get_flashed_messages() %}
+                        {% if messages %}
+                        {% for message in messages %}
+                        {{ message }}
+                        {% endfor %}
+                        {% endif %}
+                        {% endwith %}
+                    </div>
+                    <div style="clear:both"></div>
+                    <button class="btn btn-primary btn-input" type="submit" style="width: 10%;">提交</button>
+                </form>
+            </div>
+            <div class="out-table">
+                <div class="table-responsive">
+                    <table class="table">
+                        <tr>
+                            <th>教师工号<button onclick="sortTable_r(0)"> ▲ </button><button onclick="sortTable(0)"> ▼
+                                </button></th>
+                            <th>教师<button onclick="sortTable_r(1)"> ▲ </button><button onclick="sortTable(1)"> ▼
+                                </button></th>
+                            <th>课程号<button onclick="sortTable_r(2)"> ▲ </button><button onclick="sortTable(2)"> ▼
+                                </button></th>
+                            <th>课程名<button onclick="sortTable_r(3)"> ▲ </button><button onclick="sortTable(3)"> ▼
+                                </button></th>
+                            <th>授课年份<button onclick="sortTable_r(4)"> ▲ </button><button onclick="sortTable(4)"> ▼
+                                </button></th>
+                            <th>授课学期<button onclick="sortTable_r(5)"> ▲ </button><button onclick="sortTable(5)"> ▼
+                                </button></th>
+                            <th>授课学时<button onclick="sortTable_r(6)"> ▲ </button><button onclick="sortTable(6)"> ▼
+                                </button></th>
+                            <th>总学时<button onclick="sortTable_r(7)"> ▲ </button><button onclick="sortTable(7)"> ▼
+                                </button></th>
+                            <th>课程性质<button onclick="sortTable_r(8)"> ▲ </button><button onclick="sortTable(8)"> ▼
+                                </button></th>
+                        </tr>
+                        {% for item in data_list %}
+                        <tr>
+                            <td>{{item.teid}}</td>
+                            <td>{{item.teacher}}</td>
+                            <td>{{item.courseID}}</td>
+                            <td>{{item.courseName}}</td>
+                            <td>{{item.teachyear}}</td>
+                            <td>{{item.teachterm}}</td>
+                            <td>{{item.teachtime}}</td>
+                            <td>{{item.coursetime}}</td>
+                            <td>{{item.coursetype}}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+                <script>
+                    function sortTable_r(columnIndex) {
+                        var table, rows, switching, i, x, y, shouldSwitch;
+                        table = document.querySelector("table");
+                        switching = true;
+
+                        while (switching) {
+                            switching = false;
+                            rows = table.rows;
+
+                            for (i = 1; i < rows.length - 1; i++) {
+                                shouldSwitch = false;
+                                x = rows[i].querySelectorAll("td")[columnIndex].innerText;
+                                y = rows[i + 1].querySelectorAll("td")[columnIndex].innerText;
+
+                                if (y.localeCompare(x) > 0) {
+                                    shouldSwitch = true;
+                                    break;
+                                }
+                            }
+
+                            if (shouldSwitch) {
+                                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                                switching = true;
+                            }
+                        }
+                    }
+                    function sortTable(columnIndex) {
+                        var table, rows, switching, i, x, y, shouldSwitch;
+                        table = document.querySelector("table");
+                        switching = true;
+
+                        while (switching) {
+                            switching = false;
+                            rows = table.rows;
+
+                            for (i = 1; i < rows.length - 1; i++) {
+                                shouldSwitch = false;
+                                x = rows[i].querySelectorAll("td")[columnIndex].innerText;
+                                y = rows[i + 1].querySelectorAll("td")[columnIndex].innerText;
+
+                                if (x.localeCompare(y) > 0) {
+                                    shouldSwitch = true;
+                                    break;
+                                }
+                            }
+
+                            if (shouldSwitch) {
+                                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                                switching = true;
+                            }
+                        }
+                    }
+                </script>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
